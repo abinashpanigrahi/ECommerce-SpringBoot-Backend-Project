@@ -30,15 +30,15 @@ public class Address {
 	@Pattern(regexp = "[A-Za-z0-9\\s-]{3,}", message = "Not a valid locality name")
 	private String locality;
 	
-	@NotNull(message = "City name cannot be valid")
+	@NotNull(message = "City name cannot be null")
 	@Pattern(regexp = "[A-Za-z\\s]{2,}", message = "Not a valid city name")
 	private String city;
 	
-	@NotNull
+	@NotNull(message = "State name cannot be null")
 	@Embedded
 	private StateEnum state;
 	
-	
+	@NotNull(message = "Pincode cannot be null")
 	@Pattern(regexp = "[0-9]{6}", message = "Pincode not valid. Must be 6 digits")
 	private String pincode;
 	
