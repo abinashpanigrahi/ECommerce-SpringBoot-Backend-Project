@@ -16,13 +16,18 @@ public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
 	
-	
-	
-	
 	@ExceptionHandler(CustomerException.class)
 	public ResponseEntity<ErrorDetails> customerExceptionHandler(CustomerException ce, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), ce.getMessage(), wr.getDescription(false));
-		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+	}
+	
+	
+	
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity<ErrorDetails> loginExceptionHandler(LoginException le, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), le.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
 	}
 	
 	// Custom Exception Handler Area Ends

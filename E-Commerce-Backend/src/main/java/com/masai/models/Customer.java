@@ -75,27 +75,19 @@ public class Customer {
 	private Map<String, Address> address = new HashMap<>();
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 //	Establishing Customer - Order relationship
 //	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
 //	private List<Order> orders = new ArrayList<>();
+	
+	
+	
+//	Establishing Customer - Cart relationship
+//	
+//	@OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+//	private Cart customerCart;
 	
 	
 	
