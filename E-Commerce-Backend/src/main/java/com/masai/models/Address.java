@@ -1,11 +1,23 @@
 package com.masai.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -20,13 +32,13 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer addressId;
 	
-	@NotNull
 	@Pattern(regexp = "[A-Za-z0-9\\s-]{3,}", message = "Not a valid street no")
 	private String streetNo;
 	
 	@Pattern(regexp = "[A-Za-z0-9\\s-]{3,}", message = "Not a valid building name")
 	private String buildingName;
 	
+	@NotNull
 	@Pattern(regexp = "[A-Za-z0-9\\s-]{3,}", message = "Not a valid locality name")
 	private String locality;
 	
@@ -35,15 +47,17 @@ public class Address {
 	private String city;
 	
 	@NotNull(message = "State name cannot be null")
-	@Embedded
-	private StateEnum state;
+//	@Embedded
+//	@Enumerated(EnumType.STRING)
+	private String state;
 	
 	@NotNull(message = "Pincode cannot be null")
 	@Pattern(regexp = "[0-9]{6}", message = "Pincode not valid. Must be 6 digits")
 	private String pincode;
 	
-	@JsonIgnore
+	
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Customer customerId;
+	@JsonIgnore
+	private Customer customer;
 	
 }
