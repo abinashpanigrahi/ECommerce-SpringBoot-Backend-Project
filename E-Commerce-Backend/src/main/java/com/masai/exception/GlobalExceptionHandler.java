@@ -16,6 +16,13 @@ public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
 	
+	
+	@ExceptionHandler(CustomerNotFoundException.class)
+	public ResponseEntity<ErrorDetails> customerNotFoundExceptionHandler(CustomerNotFoundException cnfe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), cnfe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+	}
+	
 	@ExceptionHandler(CustomerException.class)
 	public ResponseEntity<ErrorDetails> customerExceptionHandler(CustomerException ce, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), ce.getMessage(), wr.getDescription(false));

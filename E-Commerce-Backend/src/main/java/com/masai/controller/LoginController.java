@@ -20,7 +20,7 @@ import com.masai.service.LoginLogoutService;
 public class LoginController {
 	
 	@Autowired
-	private CustomerService cService;
+	private CustomerService customerService;
 	
 	@Autowired
 	private LoginLogoutService loginService;
@@ -30,7 +30,7 @@ public class LoginController {
 	
 	@PostMapping(value = "/register/customer", consumes = "application/json")
 	public ResponseEntity<Customer> registerAccountHandler(@Valid @RequestBody Customer customer) {
-		return new ResponseEntity<>(cService.addCustomer(customer), HttpStatus.CREATED);
+		return new ResponseEntity<>(customerService.addCustomer(customer), HttpStatus.CREATED);
 	}
 	
 	// Handler to login a user
@@ -41,13 +41,14 @@ public class LoginController {
 	}
 	
 	
-	
 	// Handler to logout a user
 	
 	@PostMapping(value = "/logout/customer", consumes = "application/json")
 	public ResponseEntity<SessionDTO> logoutCustomerHandler(@RequestBody SessionDTO sessionToken){
 		return new ResponseEntity<>(loginService.logoutCustomer(sessionToken), HttpStatus.ACCEPTED);
 	}
+	
+	
 	
 	
 }
