@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.masai.exception.CustomerException;
 import com.masai.exception.CustomerNotFoundException;
+import com.masai.models.Address;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
@@ -25,4 +26,7 @@ public interface CustomerService {
 	
 	public SessionDTO deleteCustomer(CustomerDTO customerDTO, String token) throws CustomerNotFoundException;
 	
+	public Customer updateAddress(Address address, String type, String token) throws CustomerException;
+	
+	public Customer deleteAddress(String type, String token) throws CustomerException, CustomerNotFoundException;
 }

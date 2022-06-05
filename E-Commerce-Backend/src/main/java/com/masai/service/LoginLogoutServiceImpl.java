@@ -42,8 +42,17 @@ public class LoginLogoutServiceImpl implements LoginLogoutService{
 		
 		Optional<UserSession> opt = sessionDao.findByUserId(existingCustomer.getCustomerId());
 		
-		if(opt.isPresent())
-			throw new LoginException("User already logged in");
+		if(opt.isPresent()) {
+			
+			UserSession user = opt.get();
+			
+			if(user.getSessionEndTime().isBefore(LocalDateTime.now())) {
+				sessionDao.delete(user);	
+			}
+			else
+				throw new LoginException("User already logged in");
+			
+		}
 		
 		
 		if(existingCustomer.getPassword().equals(loginCustomer.getPassword())) {

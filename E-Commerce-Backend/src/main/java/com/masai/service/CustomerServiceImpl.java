@@ -16,7 +16,9 @@ import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
 import com.masai.models.SessionDTO;
+import com.masai.models.UserSession;
 import com.masai.repository.CustomerDao;
+import com.masai.repository.SessionDao;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
@@ -26,6 +28,9 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private LoginLogoutService loginService;
+	
+	@Autowired
+	private SessionDao sessionDao;
 	
 	
 	// Method to add a new customer
@@ -112,39 +117,52 @@ public class CustomerServiceImpl implements CustomerService{
 		if(opt.isEmpty() && res.isEmpty())
 			throw new CustomerNotFoundException("Customer does not exist with given mobile no or email-id");
 		
-		Customer existingCustomer = opt.get();
+		Customer existingCustomer = null;
 		
-		if(customer.getFirstName() != null) {
-			existingCustomer.setFirstName(customer.getFirstName());
-		}
+		if(opt.isPresent())
+			existingCustomer = opt.get();
+		else
+			existingCustomer = res.get();
 		
-		if(customer.getLastName() != null) {
-			existingCustomer.setLastName(customer.getLastName());
-		}
+		UserSession user = sessionDao.findByToken(token).get();
 		
-		if(customer.getEmailId() != null) {
-			existingCustomer.setEmailId(customer.getEmailId());
-		}
+		if(existingCustomer.getCustomerId() == user.getUserId()) {
 		
-		if(customer.getMobileNo() != null) {
-			existingCustomer.setMobileNo(customer.getMobileNo());
-		}
-		
-		if(customer.getPassword() != null) {
-			existingCustomer.setPassword(customer.getPassword());
-		}
-		
-		if(customer.getAddress() != null) {			
-			for(Map.Entry<String, Address> values : customer.getAddress().entrySet()) {
-				existingCustomer.getAddress().put(values.getKey(), values.getValue());
+			if(customer.getFirstName() != null) {
+				existingCustomer.setFirstName(customer.getFirstName());
 			}
+			
+			if(customer.getLastName() != null) {
+				existingCustomer.setLastName(customer.getLastName());
+			}
+			
+			if(customer.getEmailId() != null) {
+				existingCustomer.setEmailId(customer.getEmailId());
+			}
+			
+			if(customer.getMobileNo() != null) {
+				existingCustomer.setMobileNo(customer.getMobileNo());
+			}
+			
+			if(customer.getPassword() != null) {
+				existingCustomer.setPassword(customer.getPassword());
+			}
+			
+			if(customer.getAddress() != null) {			
+				for(Map.Entry<String, Address> values : customer.getAddress().entrySet()) {
+					existingCustomer.getAddress().put(values.getKey(), values.getValue());
+				}
+			}
+			
+			customerDao.save(existingCustomer);
+			return existingCustomer;
+		
+		}
+		else {
+			throw new CustomerException("Error in updating. Verification failed.");
 		}
 		
-		System.out.println(existingCustomer);
 		
-		customerDao.save(existingCustomer);
-		
-		return existingCustomer;
 	}
 
 	
@@ -166,11 +184,21 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		Customer existingCustomer = opt.get();
 		
-		existingCustomer.setMobileNo(customerUpdateDTO.getMobileNo());
+		UserSession user = sessionDao.findByToken(token).get();
 		
-		customerDao.save(existingCustomer);
+		if(user.getUserId() == existingCustomer.getCustomerId()) {
 		
-		return existingCustomer;
+			existingCustomer.setMobileNo(customerUpdateDTO.getMobileNo());
+			
+			customerDao.save(existingCustomer);
+			
+			return existingCustomer;
+		}
+		else {
+			throw new CustomerException("Error in updating. Verification failed.");
+		}
+		
+		
 	}
 
 	// Method to update password 
@@ -190,11 +218,48 @@ public class CustomerServiceImpl implements CustomerService{
 			throw new CustomerNotFoundException("Customer not registered with given mobile number");
 			
 		Customer existingCustomer = opt.get();
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		if(user.getUserId() == existingCustomer.getCustomerId()) {
 			
-		existingCustomer.setPassword(customerDTO.getPassword());
+			existingCustomer.setPassword(customerDTO.getPassword());
 			
-		return customerDao.save(existingCustomer);
+			return customerDao.save(existingCustomer);
+		}
+		else {
+			throw new CustomerException("Error in updating password. Verification failed.");
+		}
+		
 	}
+	
+	
+	// Method to add/update Address
+	
+	
+	@Override
+	public Customer updateAddress(Address address, String type, String token) throws CustomerException {
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+			
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		existingCustomer.getAddress().put(type, address);
+		
+		return customerDao.save(existingCustomer);
+		
+	}
+	
 
 	
 	
@@ -216,17 +281,61 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		Customer deletedCustomer = opt.get();
 		
-		customerDao.delete(deletedCustomer);
+		UserSession user = sessionDao.findByToken(token).get();
 		
 		SessionDTO session = new SessionDTO();
 		
-		session.setMessage("Account Deleted and Logged out");
+		session.setMessage("");
 
 		session.setToken(token);
 		
-		return loginService.logoutCustomer(session);
+		if(user.getUserId() == deletedCustomer.getCustomerId()) {
+		
+			customerDao.delete(deletedCustomer);
+			
+			session.setMessage("Account Deleted and Logged out");
+			
+			return loginService.logoutCustomer(session);
+		
+		}
+		else {
+			throw new CustomerException("Error in deleting. Verification failed.");
+		}
 		
 	}
+
+
+
+	@Override
+	public Customer deleteAddress(String type, String token) throws CustomerException, CustomerNotFoundException {
+		
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+		
+		loginService.checkTokenStatus(token);
+		
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		if(existingCustomer.getAddress().containsKey(type) == false)
+			throw new CustomerException("Address type does not exist");
+		
+		existingCustomer.getAddress().remove(type);
+		
+		return customerDao.save(existingCustomer);
+	}
+
+
+
 	
 	
 	
