@@ -15,8 +15,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
-	
-	
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ResponseEntity<ErrorDetails> productNotFound(ProductNotFoundException pnf,WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(),pnf.getMessage(),wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		
+	}
 	
 	
 	// Custom Exception Handler Area Ends
@@ -33,6 +37,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorDetails> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException manv, WebRequest wr){
 		String message = manv.getBindingResult().getFieldError().getDefaultMessage();
+	
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), message, wr.getDescription(false));
 		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
 	}
@@ -41,6 +46,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> exceptionHandler(Exception e, WebRequest wr){
+	
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), e.getMessage(), wr.getDescription(false));
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}

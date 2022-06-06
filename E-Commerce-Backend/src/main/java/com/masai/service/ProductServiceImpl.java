@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.masai.exception.ProductNotFoundException;
 import com.masai.models.Category;
 import com.masai.models.Product;
 import com.masai.repository.ProductDao;
@@ -24,41 +25,45 @@ public class ProductServiceImpl implements ProductService{
 		
 		Product addedProduct = prodDao.save(product);
 	
-	
-		
 		return addedProduct;
 	}
 
 	@Override
-	public Product getProductFromCatalogById(Integer id) {
+	public Product getProductFromCatalogById(Integer id) throws ProductNotFoundException{
 		
 		 Optional<Product> opt =   prodDao.findById(id);
+		 if(opt.isPresent()) {
+		 return opt.get();}
 		 
-		 return opt.get();
+		 else
+			 throw new ProductNotFoundException("Product not found with given id");
 	}
 
 	@Override
-	public String deleteProductFromCatalog(Integer id) {
+	public String deleteProductFromCatalog(Integer id) throws ProductNotFoundException{
 		  Optional<Product> opt  = prodDao.findById(id);
-		  
+		  if(opt.isPresent()) {
 		  Product prod = opt.get();
 		  		prodDao.delete(prod);
+		  		return "Product deleted from catalog";
+		  }
+		  else
+			  throw new ProductNotFoundException("Product not found with given id");
 		
-		return "Product deleted from catalog";
 	}
 
 	@Override
-	public Product updateProductIncatalog(Product prod) {
+	public Product updateProductIncatalog(Product prod) throws ProductNotFoundException{
 		
 		Optional<Product> opt =  prodDao.findById(prod.getProductId());
 		
 		if(opt.isPresent()) {
-			Product existingProduct = 	opt.get();
+			Product existingProduct = opt.get();
 			Product prod1 = prodDao.save(prod);
 			return prod1;
 		}
-		
-		return null;
+		else
+			throw new ProductNotFoundException("Product not found with given id");
 	}
 
 	

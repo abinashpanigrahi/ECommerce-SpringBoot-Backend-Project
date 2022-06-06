@@ -1,5 +1,7 @@
 package com.masai.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,9 @@ public class ProductController {
 	//this method adds new product to catalog by seller and returns added product
 	
 	@PostMapping("/products")
-	public ResponseEntity<Product> addProductToCatalogHandler(@RequestBody Product product){
+	public ResponseEntity<Product> addProductToCatalogHandler(@Valid @RequestBody Product product){
 		
 		Product prod = pService.addProductToCatalog(product);
-		
 		
 		return new ResponseEntity<Product>(prod,HttpStatus.ACCEPTED);
 		
@@ -59,7 +60,7 @@ public class ProductController {
 		return new ResponseEntity<String>(res,HttpStatus.OK);
 	}
 	
-	public ResponseEntity<Product> updateProductInCatalogHandler(@RequestBody Product prod){
+	public ResponseEntity<Product> updateProductInCatalogHandler(@Valid @RequestBody Product prod){
 		
 				Product prod1 = pService.updateProductIncatalog(prod);
 				
