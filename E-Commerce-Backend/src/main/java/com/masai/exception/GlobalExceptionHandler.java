@@ -16,6 +16,13 @@ public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
 	
+	@ExceptionHandler(SellerException.class)
+	public ResponseEntity<ErrorDetails> sellerExceptionHandler(SellerException slre, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), slre.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+	}
+	
+	
 	
 	
 	
