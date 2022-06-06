@@ -23,6 +23,12 @@ public class GlobalExceptionHandler {
 	}
 	
 	
+	@ExceptionHandler(SellerNotFoundException.class)
+	public ResponseEntity<ErrorDetails> sellerNotFoundExceptionHandler(SellerNotFoundException snfe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), snfe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+	}
+	
 	
 	@ExceptionHandler(CustomerNotFoundException.class)
 	public ResponseEntity<ErrorDetails> customerNotFoundExceptionHandler(CustomerNotFoundException cnfe, WebRequest wr){
