@@ -16,8 +16,33 @@ public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
 	
+	@ExceptionHandler(SellerException.class)
+	public ResponseEntity<ErrorDetails> sellerExceptionHandler(SellerException slre, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), slre.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+	}
 	
 	
+	
+	@ExceptionHandler(CustomerNotFoundException.class)
+	public ResponseEntity<ErrorDetails> customerNotFoundExceptionHandler(CustomerNotFoundException cnfe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), cnfe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(CustomerException.class)
+	public ResponseEntity<ErrorDetails> customerExceptionHandler(CustomerException ce, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), ce.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+	}
+	
+	
+	
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity<ErrorDetails> loginExceptionHandler(LoginException le, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), le.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+	}
 	
 	// Custom Exception Handler Area Ends
 	
