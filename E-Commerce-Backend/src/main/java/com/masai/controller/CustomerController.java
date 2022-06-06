@@ -36,11 +36,11 @@ public class CustomerController {
 	}
 	
 	
-	// Handler to Get a customer details by his mobile id
+	// Handler to Get a customer details of currently logged in user - sends data as per token
 	
-	@GetMapping("/customer")
-	public ResponseEntity<Customer> getCustomerByMobileNoHandler(@RequestParam("mobile") String mobileNo, @RequestHeader("token") String token){
-		return new ResponseEntity<>(customerService.getCustomerByMobileNo(mobileNo, token), HttpStatus.ACCEPTED);
+	@GetMapping("/customer/current")
+	public ResponseEntity<Customer> getLoggedInCustomerDetailsHandler(@RequestHeader("token") String token){
+		return new ResponseEntity<>(customerService.getLoggedInCustomerDetails(token), HttpStatus.ACCEPTED);
 	}
 	
 	
@@ -53,7 +53,7 @@ public class CustomerController {
 	
 	
 	// Handler to update a customer email-id or mobile no
-	@PutMapping("/customer/update")
+	@PutMapping("/customer/update/credentials")
 	public ResponseEntity<Customer> updateCustomerMobileEmailHandler(@Valid @RequestBody CustomerUpdateDTO customerUpdate, @RequestHeader("token") String token){
 		return new ResponseEntity<>(customerService.updateCustomerMobileNoOrEmailId(customerUpdate, token), HttpStatus.ACCEPTED);
 	}
@@ -61,7 +61,7 @@ public class CustomerController {
 	
 	// Handler to update customer password
 	@PutMapping("/customer/update/password")
-	public ResponseEntity<Customer> updateCustomerPasswordHandler(@Valid @RequestBody CustomerDTO customerDto, @RequestHeader("token") String token){
+	public ResponseEntity<SessionDTO> updateCustomerPasswordHandler(@Valid @RequestBody CustomerDTO customerDto, @RequestHeader("token") String token){		
 		return new ResponseEntity<>(customerService.updateCustomerPassword(customerDto, token), HttpStatus.ACCEPTED);
 	}
 	

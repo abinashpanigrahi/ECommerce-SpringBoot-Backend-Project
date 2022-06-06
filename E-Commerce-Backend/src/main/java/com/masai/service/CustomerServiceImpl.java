@@ -55,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService{
 	// Method to get a customer by mobile number
 	
 	@Override
-	public Customer getCustomerByMobileNo(String mobileNo, String token){
+	public Customer getLoggedInCustomerDetails(String token){
 		
 		if(token.contains("customer") == false) {
 			throw new LoginException("Invalid session token for customer");
@@ -63,27 +63,30 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		loginService.checkTokenStatus(token);
 		
+		UserSession user = sessionDao.findByToken(token).get();
 		
-		Optional<Customer> opt = customerDao.findByMobileNo(mobileNo);
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
 		
 		if(opt.isEmpty())
-			throw new CustomerNotFoundException("Customer not registered with given mobile number or email-id");
+			throw new CustomerNotFoundException("Customer does not exist");
 		
-		return opt.get();
+		Customer existingCustomer = opt.get();
+		
+		return existingCustomer;
 	}
 	
 	
 
 	
-	// Method to get all customers - only selller or admin can get all customers - check validity of seller token
+	// Method to get all customers - only seller or admin can get all customers - check validity of seller token
 
 	@Override
 	public List<Customer> getAllCustomers(String token) throws CustomerNotFoundException {
 		
 		// update to seller
 		
-		if(token.contains("customer") == false) {
-			throw new LoginException("Invalid session token for customer");
+		if(token.contains("seller") == false) {
+			throw new LoginException("Invalid session token.");
 		}
 		
 		loginService.checkTokenStatus(token);
@@ -97,12 +100,11 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 
-	// Method to update entire customer details - either mobile number or mobile number should be correct
+	// Method to update entire customer details - either mobile number or email id should be correct
 	
 	@Override
 	public Customer updateCustomer(CustomerUpdateDTO customer, String token) throws CustomerNotFoundException {
 		
-		System.out.println(customer);
 		
 		if(token.contains("customer") == false) {
 			throw new LoginException("Invalid session token for customer");
@@ -166,7 +168,7 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	
-	// Method to update customer mobile number - customer should send valid email-id
+	// Method to update customer mobile number - details updated for current logged in user
 
 	@Override
 	public Customer updateCustomerMobileNoOrEmailId(CustomerUpdateDTO customerUpdateDTO, String token) throws CustomerNotFoundException {
@@ -177,60 +179,69 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		loginService.checkTokenStatus(token);
 		
-		Optional<Customer> opt = customerDao.findByEmailId(customerUpdateDTO.getEmailId());
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
 		
 		if(opt.isEmpty())
-			throw new CustomerNotFoundException("Customer does not exist with given email-id");
+			throw new CustomerNotFoundException("Customer does not exist");
 		
 		Customer existingCustomer = opt.get();
 		
-		UserSession user = sessionDao.findByToken(token).get();
-		
-		if(user.getUserId() == existingCustomer.getCustomerId()) {
-		
-			existingCustomer.setMobileNo(customerUpdateDTO.getMobileNo());
-			
-			customerDao.save(existingCustomer);
-			
-			return existingCustomer;
-		}
-		else {
-			throw new CustomerException("Error in updating. Verification failed.");
+		if(customerUpdateDTO.getEmailId() != null) {
+			existingCustomer.setEmailId(customerUpdateDTO.getEmailId());
 		}
 		
+		
+		existingCustomer.setMobileNo(customerUpdateDTO.getMobileNo());
+			
+		customerDao.save(existingCustomer);
+			
+		return existingCustomer;
 		
 	}
 
-	// Method to update password 
+	// Method to update password - based on current token
 	
 	@Override
-	public Customer updateCustomerPassword(CustomerDTO customerDTO, String token) {
-			
+	public SessionDTO updateCustomerPassword(CustomerDTO customerDTO, String token) {
+		
+		
 		if(token.contains("customer") == false) {
 			throw new LoginException("Invalid session token for customer");
 		}
 			
+		
 		loginService.checkTokenStatus(token);
-			
-		Optional<Customer> opt = customerDao.findByMobileNoOrEmailId(customerDTO.getMobileId(), customerDTO.getEmailId());
-			
-		if(opt.isEmpty())
-			throw new CustomerNotFoundException("Customer not registered with given mobile number");
-			
-		Customer existingCustomer = opt.get();
 		
 		UserSession user = sessionDao.findByToken(token).get();
 		
-		if(user.getUserId() == existingCustomer.getCustomerId()) {
-			
-			existingCustomer.setPassword(customerDTO.getPassword());
-			
-			return customerDao.save(existingCustomer);
-		}
-		else {
-			throw new CustomerException("Error in updating password. Verification failed.");
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		
+		if(customerDTO.getMobileId().equals(existingCustomer.getMobileNo()) == false) {
+			throw new CustomerException("Verification error. Mobile number does not match");
 		}
 		
+		existingCustomer.setPassword(customerDTO.getPassword());
+		
+		customerDao.save(existingCustomer);
+		
+		SessionDTO session = new SessionDTO();
+		
+		session.setToken(token);
+		
+		loginService.logoutCustomer(session);
+		
+		session.setMessage("Updated password and logged out. Login again with new password");
+		
+		return session;
+
 	}
 	
 	
@@ -274,14 +285,14 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		loginService.checkTokenStatus(token);
 		
-		Optional<Customer> opt = customerDao.findByMobileNo(customerDTO.getMobileId());
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
 		
 		if(opt.isEmpty())
-			throw new CustomerNotFoundException("Customer Not exist with given mobile no");
+			throw new CustomerNotFoundException("Customer does not exist");
 		
-		Customer deletedCustomer = opt.get();
-		
-		UserSession user = sessionDao.findByToken(token).get();
+		Customer existingCustomer = opt.get();
 		
 		SessionDTO session = new SessionDTO();
 		
@@ -289,19 +300,21 @@ public class CustomerServiceImpl implements CustomerService{
 
 		session.setToken(token);
 		
-		if(user.getUserId() == deletedCustomer.getCustomerId()) {
-		
-			customerDao.delete(deletedCustomer);
+		if(existingCustomer.getMobileNo().equals(customerDTO.getMobileId()) 
+				&& existingCustomer.getPassword().equals(customerDTO.getPassword())) {
 			
-			session.setMessage("Account Deleted and Logged out");
+			customerDao.delete(existingCustomer);
 			
-			return loginService.logoutCustomer(session);
-		
+			loginService.logoutCustomer(session);
+			
+			session.setMessage("Deleted account and logged out successfully");
+			
+			return session;
 		}
 		else {
-			throw new CustomerException("Error in deleting. Verification failed.");
+			throw new CustomerException("Verification error in deleting account. Please re-check details");
 		}
-		
+
 	}
 
 
@@ -312,8 +325,6 @@ public class CustomerServiceImpl implements CustomerService{
 		if(token.contains("customer") == false) {
 			throw new LoginException("Invalid session token for customer");
 		}
-		
-		loginService.checkTokenStatus(token);
 		
 		loginService.checkTokenStatus(token);
 		

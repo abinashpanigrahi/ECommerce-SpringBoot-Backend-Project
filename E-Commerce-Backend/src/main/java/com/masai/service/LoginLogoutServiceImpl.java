@@ -107,6 +107,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService{
 	
 	@Override
 	public void checkTokenStatus(String token) {
+		
 		Optional<UserSession> opt = sessionDao.findByToken(token);
 		
 		if(opt.isPresent()) {

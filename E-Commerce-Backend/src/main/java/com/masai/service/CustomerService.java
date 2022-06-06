@@ -14,7 +14,7 @@ public interface CustomerService {
 	
 	public Customer addCustomer(Customer customer) throws CustomerException;
 	
-	public Customer getCustomerByMobileNo(String mobileNo, String token) throws CustomerNotFoundException;
+	public Customer getLoggedInCustomerDetails(String token) throws CustomerNotFoundException;
 	
 	public List<Customer> getAllCustomers(String token) throws CustomerNotFoundException;
 	
@@ -22,7 +22,7 @@ public interface CustomerService {
 	
 	public Customer updateCustomerMobileNoOrEmailId(CustomerUpdateDTO customerUpdateDTO, String token) throws CustomerNotFoundException;
 	
-	public Customer updateCustomerPassword(CustomerDTO customerDTO, String token) throws CustomerNotFoundException;
+	public SessionDTO updateCustomerPassword(CustomerDTO customerDTO, String token) throws CustomerNotFoundException;
 	
 	public SessionDTO deleteCustomer(CustomerDTO customerDTO, String token) throws CustomerNotFoundException;
 	
