@@ -16,6 +16,12 @@ public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
 	
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ResponseEntity<ErrorDetails> productNotFound(ProductNotFoundException pnf,WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(),pnf.getMessage(),wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(SellerException.class)
 	public ResponseEntity<ErrorDetails> sellerExceptionHandler(SellerException slre, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), slre.getMessage(), wr.getDescription(false));
@@ -50,6 +56,11 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
 	}
 	
+	@ExceptionHandler(OrderException.class)
+	public ResponseEntity<ErrorDetails> orderExceptionHandler(OrderException oe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), oe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+	}
 	// Custom Exception Handler Area Ends
 	
 	
