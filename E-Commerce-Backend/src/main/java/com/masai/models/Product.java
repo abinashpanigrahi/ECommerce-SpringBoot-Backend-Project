@@ -1,15 +1,19 @@
 package com.masai.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,8 +55,8 @@ public class Product {
 //	@ManyToMany(cascade = CascadeType.ALL)
 //	private Order order;
 
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	private Seller seller;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Seller seller;
 
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
