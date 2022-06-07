@@ -90,7 +90,7 @@ public class Customer {
 	
 //	Establishing Customer - Cart relationship
 //	
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+	@OneToOne(cascade = CascadeType.ALL)
 	private Cart customerCart;
 	
 	

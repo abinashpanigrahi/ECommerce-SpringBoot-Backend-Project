@@ -44,7 +44,13 @@ public class CustomerServiceImpl implements CustomerService{
 				
 		customer.setCreatedOn(LocalDateTime.now());
 		
-		customer.setCustomerCart(new Cart());
+		Cart c = new Cart();
+		
+		System.out.println(c);
+		
+		System.out.println(c.getProducts().size());
+		
+		customer.setCustomerCart(c);
 		
 		customer.setOrders(new ArrayList<Order>());
 
