@@ -1,13 +1,18 @@
 package com.masai.models;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,9 +48,9 @@ public class Seller {
 	@Column(unique = true)
 	private String emailId;
 	
-	
-	
-	
+	@OneToMany
+	@JsonIgnore
+	private List<Product> product;
 	
 
 }
