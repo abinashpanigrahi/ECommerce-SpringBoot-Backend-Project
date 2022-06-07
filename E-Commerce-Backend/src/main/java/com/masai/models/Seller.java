@@ -1,11 +1,13 @@
 package com.masai.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,8 +35,12 @@ public class Seller {
 	
 	@NotNull(message="Please enter your mobile Number")
 	@Pattern(regexp="[6789]{1}[0-9]{9}", message="Enter a valid Mobile Number")
+	@Column(unique = true)
 	private String mobile;
+	
+	
 	@Email
+	@Column(unique = true)
 	private String emailId;
 	
 	

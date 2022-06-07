@@ -16,12 +16,24 @@ public class GlobalExceptionHandler {
 	
 	// Custom Exception Handler Area Starts
 	
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ResponseEntity<ErrorDetails> productNotFound(ProductNotFoundException pnf,WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(),pnf.getMessage(),wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(SellerException.class)
 	public ResponseEntity<ErrorDetails> sellerExceptionHandler(SellerException slre, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), slre.getMessage(), wr.getDescription(false));
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
 	
+	
+	@ExceptionHandler(SellerNotFoundException.class)
+	public ResponseEntity<ErrorDetails> sellerNotFoundExceptionHandler(SellerNotFoundException snfe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), snfe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+	}
 	
 	
 	@ExceptionHandler(CustomerNotFoundException.class)
