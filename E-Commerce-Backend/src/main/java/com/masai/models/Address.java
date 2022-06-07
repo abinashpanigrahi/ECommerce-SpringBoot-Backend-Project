@@ -2,6 +2,8 @@ package com.masai.models;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -47,8 +48,6 @@ public class Address {
 	private String city;
 	
 	@NotNull(message = "State name cannot be null")
-//	@Embedded
-//	@Enumerated(EnumType.STRING)
 	private String state;
 	
 	@NotNull(message = "Pincode cannot be null")
@@ -59,5 +58,6 @@ public class Address {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Customer customer;
+	
 	
 }

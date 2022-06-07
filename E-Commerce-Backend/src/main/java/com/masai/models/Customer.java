@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -60,8 +62,8 @@ public class Customer {
 	
 	private LocalDateTime createdOn;
 	
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//	private List<Address> address = new ArrayList<>();
+	@Embedded
+	private CreditCard creditCard;
 	
 	
 	@OneToMany(cascade = CascadeType.ALL)
@@ -86,8 +88,8 @@ public class Customer {
 	
 //	Establishing Customer - Cart relationship
 //	
-//	@OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
-//	private Cart customerCart;
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+	private Cart customerCart;
 	
 	
 	

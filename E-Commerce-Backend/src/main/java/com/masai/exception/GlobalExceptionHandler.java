@@ -65,13 +65,18 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
 	}
 	
+	@ExceptionHandler(OrderException.class)
+	public ResponseEntity<ErrorDetails> orderExceptionHandler(OrderException oe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), oe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+	}
 	// Custom Exception Handler Area Ends
 	
 	
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<ErrorDetails> noHandlerFoundExceptionHandler(NoHandlerFoundException nhfe, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), nhfe.getMessage(), wr.getDescription(false));
-		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<ErrorDetails>(err, HttpStatus.BAD_REQUEST);
 	}
 	
 	
@@ -80,7 +85,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorDetails> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException manv, WebRequest wr){
 		String message = manv.getBindingResult().getFieldError().getDefaultMessage();
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), message, wr.getDescription(false));
-		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+		return new ResponseEntity<ErrorDetails>(err, HttpStatus.FORBIDDEN);
 	}
 	
 	
@@ -88,7 +93,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> exceptionHandler(Exception e, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), e.getMessage(), wr.getDescription(false));
-		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<ErrorDetails>(err, HttpStatus.BAD_REQUEST);
 	}
 	
 }
