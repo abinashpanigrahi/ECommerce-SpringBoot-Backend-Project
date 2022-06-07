@@ -41,7 +41,6 @@ public class Product {
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
 	@ManyToOne(cascade = CascadeType.ALL)
-//	@JsonIgnore
 	private Category category;
 //	@ManyToMany(cascade = CascadeType.ALL)
 //	private Order order;

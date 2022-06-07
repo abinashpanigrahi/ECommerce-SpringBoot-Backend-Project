@@ -1,5 +1,7 @@
 package com.masai.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.models.Category;
 import com.masai.models.Product;
+import com.masai.models.ProductDTO;
 import com.masai.service.CategoryService;
 import com.masai.service.ProductService;
 
@@ -68,6 +71,21 @@ public class ProductController {
 		
 	}
 	
+	@GetMapping("/products")
+	public ResponseEntity<List<Product>> getAllProductsHandler(){
+		
+		List<Product> list = pService.getAllProductsIncatalog();
+		
+		return new ResponseEntity<List<Product>>(list,HttpStatus.OK);
+	}
+	
+	@GetMapping("/products1/{id}")
+	public ResponseEntity<List<ProductDTO>> getAllProductsInCategory(@PathVariable("id") Integer id){
+		
+		List<ProductDTO> list = pService.getProductsOfCategory(id);
+		return new ResponseEntity<List<ProductDTO>>(list,HttpStatus.OK);
+		
+	}
 	
 	
 	
