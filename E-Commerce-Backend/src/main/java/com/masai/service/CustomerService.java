@@ -5,6 +5,7 @@ import java.util.List;
 import com.masai.exception.CustomerException;
 import com.masai.exception.CustomerNotFoundException;
 import com.masai.models.Address;
+import com.masai.models.CreditCard;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
@@ -21,6 +22,8 @@ public interface CustomerService {
 	public Customer updateCustomer(CustomerUpdateDTO customer, String token) throws CustomerNotFoundException;
 	
 	public Customer updateCustomerMobileNoOrEmailId(CustomerUpdateDTO customerUpdateDTO, String token) throws CustomerNotFoundException;
+	
+	public Customer updateCreditCardDetails(String token, CreditCard card) throws CustomerException;
 	
 	public SessionDTO updateCustomerPassword(CustomerDTO customerDTO, String token) throws CustomerNotFoundException;
 	

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -60,8 +61,8 @@ public class Customer {
 	
 	private LocalDateTime createdOn;
 	
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//	private List<Address> address = new ArrayList<>();
+	@Embedded
+	private CreditCard creditCard;
 	
 	
 	@OneToMany(cascade = CascadeType.ALL)
