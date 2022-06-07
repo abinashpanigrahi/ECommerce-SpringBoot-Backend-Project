@@ -12,6 +12,7 @@ import com.masai.exception.CustomerException;
 import com.masai.exception.CustomerNotFoundException;
 import com.masai.exception.LoginException;
 import com.masai.models.Address;
+import com.masai.models.CreditCard;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
@@ -271,7 +272,32 @@ public class CustomerServiceImpl implements CustomerService{
 		
 	}
 	
-
+	
+	// Method to update Credit card
+	
+	@Override
+	public Customer updateCreditCardDetails(String token, CreditCard card) throws CustomerException{
+		
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+		
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		existingCustomer.setCreditCard(card);
+		
+		return customerDao.save(existingCustomer);
+	}
+	
 	
 	
 	// Method to delete a customer by mobile id
