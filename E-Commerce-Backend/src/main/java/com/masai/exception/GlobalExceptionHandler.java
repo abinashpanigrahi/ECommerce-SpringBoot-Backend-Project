@@ -56,6 +56,11 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
 	}
 	
+	@ExceptionHandler(OrderException.class)
+	public ResponseEntity<ErrorDetails> orderExceptionHandler(OrderException oe, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), oe.getMessage(), wr.getDescription(false));
+		return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+	}
 	// Custom Exception Handler Area Ends
 	
 	
