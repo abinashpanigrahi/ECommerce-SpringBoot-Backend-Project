@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,8 +45,9 @@ public class Product {
 	private Category category;
 //	@ManyToMany(cascade = CascadeType.ALL)
 //	private Order order;
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	private Seller seller;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Seller seller;
 	
 	
 

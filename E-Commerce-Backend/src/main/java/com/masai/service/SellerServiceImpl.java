@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.masai.exception.LoginException;
 import com.masai.exception.SellerException;
+import com.masai.models.Product;
 import com.masai.models.Seller;
 import com.masai.models.SellerDTO;
 import com.masai.models.SessionDTO;
@@ -26,6 +27,9 @@ public class SellerServiceImpl implements SellerService {
 	
 	@Autowired
 	private SessionDao sessionDao;
+	
+	@Autowired
+	private ProductService products;
 	
 
 	@Override
@@ -109,7 +113,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public Seller updateSellerMobile(Integer sellerId, String mobile, String token) throws SellerException {
+	public Seller updateSellerMobile( SellerDTO seller, String token) throws SellerException {
 		
 		if(token.contains("seller") == false) {
 			throw new LoginException("Invalid session token for seller");
@@ -119,10 +123,10 @@ public class SellerServiceImpl implements SellerService {
 		
 		UserSession user = sessionDao.findByToken(token).get();
 		
-		Seller existingSeller=sellerDao.findById(sellerId).orElseThrow(()->new SellerException("Seller not found for this ID: "+sellerId));
+		Seller existingSeller=sellerDao.findById(user.getUserId()).orElseThrow(()->new SellerException("Seller not found for this ID: "+user.getUserId()));
 		
 		if(user.getUserId() == existingSeller.getSellerId()) {
-			existingSeller.setMobile(mobile);
+			existingSeller.setMobile(seller.getMobile());
 			return sellerDao.save(existingSeller);
 		}
 		else {
@@ -204,5 +208,7 @@ public class SellerServiceImpl implements SellerService {
 		return session;
 
 	}
+
+
 
 }
