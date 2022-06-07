@@ -59,7 +59,7 @@ public class CartServiceImpl implements CartService {
 		
 		for(Product existing : cartProducts) {
 			if(product.getProductId() == existing.getProductId()) {
-				product.setReqQuantity(quantity);
+				product.getQuantity();
 				cartDao.save(existingCustomer.getCustomerCart());
 				return  existingCustomer.getCustomerCart();
 				
