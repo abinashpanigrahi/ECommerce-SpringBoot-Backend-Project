@@ -1,5 +1,6 @@
 package com.masai.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,28 +28,37 @@ import com.masai.service.CartService;
 public class CartController {
 
 	@Autowired
-	private CartService cService;
+	private CartService cartService;
 	
 	@Autowired
-	private CartDao cDao;
+	private CartDao cartDao;
 	
 	@Autowired
-	private CustomerDao cuDao;
+	private CustomerDao customerDao;
 	
 
-//	@PostMapping(value = "/cart")
-//	public ResponseEntity<Cart> addProductToCartHander(@RequestBody Product product ,@RequestHeader("token")String token){
-//		
-//		
-//	}
+	@PostMapping(value = "/cart/{quantity}")
+	public ResponseEntity<Cart> addProductToCartHander(@RequestBody Product product ,@RequestHeader("token")String token,@PathVariable("quantity") Integer quantity){
+		
+		Cart cart = cartService.addProductToCart(product, token, quantity);
+		return new ResponseEntity<Cart>(cart,HttpStatus.CREATED);
+	}
 	
 //	
-//	@GetMapping(value = "/cart")
-//	public ResponseEntity<Cart> getCartProductHandler(){
-//		
-//	}
-//	
+	@GetMapping(value = "/cart")
+	public ResponseEntity<List<Product>> getCartProductHandler(@RequestHeader("token")String token){
+		
+		List<Product> cartProducts=cartService.getCartProduct(token);
+		return new ResponseEntity<List<Product>>(cartProducts,HttpStatus.ACCEPTED);
+	}
 	
+	
+	@DeleteMapping(value = "/cart")
+	public ResponseEntity<Cart> addProductToCartHander(@RequestBody Product product ,@RequestHeader("token")String token){
+		
+		Cart cart = cartService.removeProductFromCart(product, token);
+		return new ResponseEntity<Cart>(cart,HttpStatus.OK);
+	}
 	
 	
 	

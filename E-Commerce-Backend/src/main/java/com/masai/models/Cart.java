@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -33,28 +34,17 @@ public class Cart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@NotNull
-	@Column(name = "cartId")
+//	@Column(name = "cartId")
 	private Integer cartId;
 
-//	
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@ElementCollection
-//    @CollectionTable(name = "product_mapping", 
-//     joinColumns = {@JoinColumn(name = "cart_id", referencedColumnName = "cartId")})
-//    @MapKeyColumn(name = "product_name")
-//    @Column(name = "quantity")
-//	private Map<Product,Integer> products = new HashMap<>();
-//	
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Product> Products = new ArrayList<>();
 	
-
-	
 	private Double cartTotal;
 	
-	
-	private Customer myCustomer;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Customer customer;
 	
 	
 	

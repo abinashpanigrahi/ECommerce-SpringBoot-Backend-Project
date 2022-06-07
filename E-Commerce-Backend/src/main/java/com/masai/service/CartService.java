@@ -1,20 +1,22 @@
 package com.masai.service;
 
 import java.util.List;
-import java.util.Map;
 
+
+import com.masai.controller.ProductNotFound;
+import com.masai.exception.CartItemNotFound;
 import com.masai.models.Cart;
-import com.masai.models.Customer;
+
 import com.masai.models.Product;
-import com.masai.models.ProductDTO;
+
 
 
 
 public interface CartService {
 	
-	public Cart addProductToCart(Customer customer,Product product,String token,Integer quantity);
-	public List<Product> getCartProduct(Customer customer,String token);
-	public Cart removeProductFromCart(Customer customer,Product product,String token);
+	public Cart addProductToCart(Product product,String token,Integer quantity) throws CartItemNotFound;
+	public List<Product> getCartProduct(String token);
+	public Cart removeProductFromCart(Product product,String token) throws ProductNotFound;
 //	public Cart changeQuantity(Product product,Customer customer,Integer quantity);
 	
 		

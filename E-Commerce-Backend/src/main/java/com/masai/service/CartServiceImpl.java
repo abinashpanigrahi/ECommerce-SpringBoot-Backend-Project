@@ -1,46 +1,73 @@
 package com.masai.service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.exception.CartItemNotFound;
+import com.masai.exception.CustomerNotFoundException;
+import com.masai.exception.LoginException;
 import com.masai.models.Cart;
 import com.masai.models.Customer;
 import com.masai.models.Product;
-import com.masai.models.ProductDTO;
+import com.masai.models.UserSession;
 import com.masai.repository.CartDao;
+import com.masai.repository.CustomerDao;
+import com.masai.repository.SessionDao;
 
 @Service
 public class CartServiceImpl implements CartService {
 
 	@Autowired
-	private CartDao cDao;
+	private CartDao cartDao;
+	
+	@Autowired
+	private SessionDao sessionDao;
+	
+	
+	@Autowired
+	private CustomerDao customerDao;
+	
+	@Autowired
+	private LoginLogoutService loginService;
 
 	@Override
-	public Cart addProductToCart(Customer customer, Product product, String token,Integer quantity) {
+	public Cart addProductToCart(Product product, String token,Integer quantity) {
 		
+		if(token.contains("customer") == false) {
+		throw new LoginException("Invalid session token for customer");
+	}
+	
+	loginService.checkTokenStatus(token);
+	
+	UserSession user = sessionDao.findByToken(token).get();
+	
+	Optional<Customer> opt = customerDao.findById(user.getUserId());
+	
+	if(opt.isEmpty())
+		throw new CustomerNotFoundException("Customer does not exist");
+	
+	Customer existingCustomer = opt.get();
 		
+	
 		
-		Integer cartId = customer.getCart().getCartId();
+		Integer cartId = existingCustomer.getCustomerCart().getCartId();
 		
-		List<Product> cartProducts = customer.getCart().getProducts();
+		List<Product> cartProducts = existingCustomer.getCustomerCart().getProducts();
 		
 		for(Product existing : cartProducts) {
 			if(product.getProductId() == existing.getProductId()) {
 				product.setReqQuantity(quantity);
-				cDao.save(customer.getCart());
-				return  customer.getCart();
+				cartDao.save(existingCustomer.getCustomerCart());
+				return  existingCustomer.getCustomerCart();
 				
 			}
 		}
 		cartProducts.add(product);
-		cDao.save(customer.getCart());
-		return  customer.getCart();
+		cartDao.save(existingCustomer.getCustomerCart());
+		return  existingCustomer.getCustomerCart();
 		
 		
 	}
@@ -48,159 +75,68 @@ public class CartServiceImpl implements CartService {
 	
 
 	@Override
-	public List<Product> getCartProduct(Customer customer, String token) {
-		Integer cartId = customer.getCart().getCartId();
-		Cart cart = cDao.findbyId(cartId);
-		return cart.getProducts();
+	public List<Product> getCartProduct(String token) {
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+		
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		Integer cartId = existingCustomer.getCustomerCart().getCartId();
+		Optional<Cart> optCart= cartDao.findById(cartId);
+		
+		if(optCart.isEmpty()) {
+			throw new CartItemNotFound("cart Not found by Id");
+		}
+		return optCart.get().getProducts();
+		
+//		return cart.getProducts();
 	}
 
 	
 	
 	@Override
-	public Cart removeProductFromCart(Customer customer, Product product, String token) {
+	public Cart removeProductFromCart(Product product, String token) {
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
 		
-		Integer cartId = customer.getCart().getCartId();
+		loginService.checkTokenStatus(token);
 		
-		Cart cart = cDao.findbyId(cartId);
+		UserSession user = sessionDao.findByToken(token).get();
 		
-		List<Product> cartProducts = customer.getCart().getProducts();
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+//		Integer cartId = existingCustomer.getCustomerCart().getCartId();
+//		
+//	Optional<Cart> optCart = cartDao.findById(cartId);
+	
+//	if(optCart.isPresent()) {
+//		Cart cart=optCart.get();
+//	}
+		
+		List<Product> cartProducts = existingCustomer.getCustomerCart().getProducts();
 		
 		for(Product existing : cartProducts) {
 			if(product.getProductId() == existing.getProductId()) {
 				cartProducts.remove(existing);
 			}
 		}
-		return cDao.save(cart);
+		return cartDao.save(existingCustomer.getCustomerCart());
 		
 		
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//		
-//
-//	@Override
-//	public Cart addProductQuantity(Customer customer, Product product,String token) {
-//		
-//		
-//		Cart customerCart = customer.getCart();
-//		Map<Product,Integer> existingCartProduct = customerCart.getProducts();
-//		
-//		
-//		Double totalAmount=0.0;
-//		
-//		Set<Entry<Product,Integer>> productSet=existingCartProduct.entrySet();
-//		for(Entry<Product,Integer> set : productSet) {
-//			
-//			totalAmount+=set.getKey().getPrice()*set.getKey().getReqQuantity();
-//		}
-//		customerCart.setTotal(totalAmount);
-//		
-//		
-//		
-//		if(existingCartProduct.containsKey(product)) {
-//			Integer quantity = existingCartProduct.get(product);
-//			quantity++;
-//			totalAmount=totalAmount+product.getPrice();
-//			existingCartProduct.put(product, quantity);
-//		}
-//		else {
-//			existingCartProduct.put(product,1);
-//		}
-//		return customerCart;
-//	}
-//
-//	
-//	
-//	
-//	@Override
-//	public Map<Product,Integer> getCartProduct(Customer customer,String token) {
-//		Cart customerCart = customer.getCart();
-//		Map<Product,Integer> existingCartProduct = customerCart.getProducts();
-//		return existingCartProduct;
-//	}
-//
-//
-//	@Override
-//	public Cart removeProductFromCart(Customer customer,Product product,String token) {
-//		
-//		Cart customerCart = customer.getCart();
-//		Map<Product,Integer> existingCartProduct = customerCart.getProducts();
-//		
-//		if(existingCartProduct.containsKey(product)) {
-//			existingCartProduct.remove(product);
-//			
-//			Double totalAmount=0.0;
-//			
-//			Set<Entry<Product,Integer>> productSet=existingCartProduct.entrySet();
-//			for(Entry<Product,Integer> set : productSet) {
-//				totalAmount+=set.getKey().getPrice()*set.getKey().getReqQuantity();
-//			}
-//			customerCart.setTotal(totalAmount);
-//			
-//		}
-//		return customerCart;
-//	}
-//
-//
-//
-//
-//	@Override
-//	public Cart reduceProductQuantity(Customer customer, Product product, String token) {
-//		
-//		Cart customerCart = customer.getCart();
-//		Map<Product,Integer> existingCartProduct = customerCart.getProducts();
-//
-//		Double totalAmount=0.0;
-//		if(existingCartProduct.containsKey(product)) {
-//			Integer quantity = existingCartProduct.get(product);
-//			if(quantity == 1) {
-//				existingCartProduct.remove(product);
-//				
-//				Set<Entry<Product,Integer>> productSet=existingCartProduct.entrySet();
-//				for(Entry<Product,Integer> set : productSet) {
-//					totalAmount+=set.getKey().getPrice()*set.getKey().getReqQuantity();
-//				}
-//				customerCart.setTotal(totalAmount);
-//			}
-//			else {
-//				quantity--;
-//				totalAmount=totalAmount-product.getPrice();
-//				existingCartProduct.put(product, quantity);
-//				
-//			}
-//		
-//		}
-//		return customerCart;
-//		
-//	}
-//
-//	
-//	
-
-	
-
-
 }
