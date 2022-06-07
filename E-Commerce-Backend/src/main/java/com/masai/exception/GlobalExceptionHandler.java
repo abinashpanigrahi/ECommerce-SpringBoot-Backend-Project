@@ -22,6 +22,15 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(CategoryNotFoundException.class)
+	public ResponseEntity<ErrorDetails> categoryNotFound(CategoryNotFoundException cnf, WebRequest wr){
+		ErrorDetails err = new ErrorDetails(LocalDateTime.now(),cnf.getMessage(), wr.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(err,HttpStatus.NO_CONTENT);
+		
+		
+	}
+	
 	@ExceptionHandler(SellerException.class)
 	public ResponseEntity<ErrorDetails> sellerExceptionHandler(SellerException slre, WebRequest wr){
 		ErrorDetails err = new ErrorDetails(LocalDateTime.now(), slre.getMessage(), wr.getDescription(false));
