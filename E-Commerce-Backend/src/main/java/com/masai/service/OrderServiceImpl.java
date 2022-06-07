@@ -7,9 +7,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.masai.exception.CustomerNotFoundException;
+import com.masai.exception.LoginException;
 import com.masai.exception.OrderException;
 import com.masai.models.Customer;
 import com.masai.models.Order;
+import com.masai.models.OrderDTO;
+import com.masai.models.OrderStatusValues;
 import com.masai.repository.OrderDao;
 
 @Service
@@ -18,9 +22,25 @@ public class OrderServiceImpl implements OrderService {
 	private OrderDao oDao;
 	
 	@Override
-	public Order saveOrder(Order order) {
-		// TODO Auto-generated method stub
-		return oDao.save(order);
+	public Order saveOrder(OrderDTO odto,String token) throws LoginException {
+		
+		Order newOrder= new Order();
+		
+		CustomerService cs= new CustomerServiceImpl();
+		
+		if(cs !=null) {
+			Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
+			newOrder.setCustomer(loggedInCustomer);
+			newOrder.setCardNumber(odto.getCardNumber());
+			newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
+			newOrder.setDate(LocalDate.now());
+			newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
+			newOrder.setTotal(10000.00);
+			return oDao.save(newOrder);
+		}
+		else {
+			throw new LoginException("Invalid session token for customer"+"Kindly Login");
+		}
 	}
 
 	@Override
@@ -47,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order updateOrderByOrderId(Order order) throws OrderException {
+	public Order updateOrderByOrder(Order order) throws OrderException {
 		Order existingOrder= oDao.findById(order.getOrderId()).orElseThrow(()->new OrderException("No order exists with given OrderId "+ order.getOrderId()));
 		return oDao.save(order);
 	}
@@ -69,5 +89,14 @@ public class OrderServiceImpl implements OrderService {
 		else
 			throw new OrderException("No Order exists with orderId "+orderId);
 	}
+
+//	@Override
+//	public Customer getCustomerIdByToken(String token) throws CustomerNotFoundException {
+//		CustomerService cs= new CustomerServiceImpl();
+//		
+//		//Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
+//		return cs.getLoggedInCustomerDetails(token);
+//		
+//	}
 
 }
