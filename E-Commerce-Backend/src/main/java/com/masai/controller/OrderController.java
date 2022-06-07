@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.models.Customer;
 import com.masai.models.Order;
+import com.masai.models.OrderDTO;
 import com.masai.repository.OrderDao;
 import com.masai.service.OrderService;
 
@@ -31,10 +33,10 @@ public class OrderController {
 	@Autowired
 	private OrderService oService;
 	
-	@PostMapping("/orders")
-	public ResponseEntity<Order> addTheNewOrder(@Valid @RequestBody Order order){
+	@PostMapping("/order/place")
+	public ResponseEntity<Order> addTheNewOrder(@Valid @RequestBody OrderDTO odto,@RequestHeader("token") String token){
 		
-		Order savedorder = oService.saveOrder(order);
+		Order savedorder = oService.saveOrder(odto,token);
 		return new ResponseEntity<Order>(savedorder,HttpStatus.CREATED);
 		
 	}
@@ -62,9 +64,9 @@ public class OrderController {
 	}
 	
 	@PutMapping("/order")
-	public ResponseEntity<Order> updateOrderByOrderId(@Valid @RequestBody Order order){
+	public ResponseEntity<Order> updateOrderByOrder(@Valid @RequestBody Order order){
 		
-		Order updatedOrder= oService.updateOrderByOrderId(order);
+		Order updatedOrder= oService.updateOrderByOrder(order);
 		
 		return new ResponseEntity<Order>(updatedOrder,HttpStatus.ACCEPTED);
 	}

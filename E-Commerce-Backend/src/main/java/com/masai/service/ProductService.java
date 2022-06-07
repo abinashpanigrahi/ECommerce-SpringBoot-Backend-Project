@@ -2,8 +2,10 @@ package com.masai.service;
 
 import java.util.List;
 
+import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
+import com.masai.models.ProductStatus;
 
 public interface ProductService {
 
@@ -17,6 +19,9 @@ public interface ProductService {
 	
 	public List<Product> getAllProductsIncatalog();
 	
-	public List<ProductDTO> getProductsOfCategory(Integer id);
+	public List<ProductDTO> getProductsOfCategory(CategoryEnum catenum);
+	
+	public List<ProductDTO> getProductsOfStatus(ProductStatus status);
+	
 
 }

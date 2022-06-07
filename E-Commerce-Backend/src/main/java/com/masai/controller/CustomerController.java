@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.models.Address;
+import com.masai.models.CreditCard;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
@@ -70,6 +71,13 @@ public class CustomerController {
 	@PutMapping("/customer/update/address")
 	public ResponseEntity<Customer> updateAddressHandler(@Valid @RequestBody Address address, @RequestParam("type") String type, @RequestHeader("token") String token){
 		return new ResponseEntity<>(customerService.updateAddress(address, type, token), HttpStatus.ACCEPTED);
+	}
+	
+	
+	// Handler to update Credit card details
+	@PutMapping("/customer/update/card")
+	public ResponseEntity<Customer> updateCreditCardHandler(@RequestHeader("token") String token, @Valid @RequestBody CreditCard newCard){
+		return new ResponseEntity<>(customerService.updateCreditCardDetails(token, newCard), HttpStatus.ACCEPTED);
 	}
 	
 	
