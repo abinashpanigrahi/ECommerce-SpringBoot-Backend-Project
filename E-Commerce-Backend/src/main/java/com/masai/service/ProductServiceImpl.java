@@ -13,6 +13,7 @@ import com.masai.exception.ProductNotFoundException;
 import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
+import com.masai.models.ProductStatus;
 import com.masai.repository.ProductDao;
 
 @Service
@@ -92,6 +93,18 @@ public class ProductServiceImpl implements ProductService{
 		}
 		else
 			throw new CategoryNotFoundException("No products found with category:"+catenum);
+	}
+
+	@Override
+	public List<ProductDTO> getProductsOfStatus(ProductStatus status) {
+		
+		List<ProductDTO> list = prodDao.getProductsWithStatus(status);
+		
+		if(list.size()>0) {
+			return list;
+		}
+		else
+			throw new ProductNotFoundException("No products found with given status:"+status);
 	}
 
 	

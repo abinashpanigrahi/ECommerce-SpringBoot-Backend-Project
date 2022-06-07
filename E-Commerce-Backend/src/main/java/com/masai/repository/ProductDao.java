@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
+import com.masai.models.ProductStatus;
 
 
 @Repository
@@ -19,6 +20,11 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price) "
 			+ "from Product p where p.category=:catenum")
 	public List<ProductDTO> getAllProductsInACategory(@Param("catenum") CategoryEnum catenum);
+	
+	
+	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price) "
+			+ "from Product p where p.status=:status")
+	public List<ProductDTO> getProductsWithStatus(@Param("status") ProductStatus status);
 	
 
 }
