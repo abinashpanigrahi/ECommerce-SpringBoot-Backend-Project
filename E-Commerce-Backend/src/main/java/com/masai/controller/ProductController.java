@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
+import com.masai.models.ProductStatus;
 import com.masai.service.ProductService;
 
 @RestController
@@ -90,6 +91,15 @@ public class ProductController {
 		
 	}
 	
+	@GetMapping("/products/status/{status}")
+	public ResponseEntity<List<ProductDTO>> getProductsWithStatusHandler(@PathVariable("status") String status){
+		
+		ProductStatus ps = ProductStatus.valueOf(status.toUpperCase());
+		List<ProductDTO> list = pService.getProductsOfStatus(ps);
+		
+		return new ResponseEntity<List<ProductDTO>>(list,HttpStatus.OK);
+		
+	}
 	
 	
 	
