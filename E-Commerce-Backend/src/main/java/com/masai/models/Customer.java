@@ -1,7 +1,9 @@
 package com.masai.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -81,8 +83,8 @@ public class Customer {
 	
 	
 //	Establishing Customer - Order relationship
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-//	private List<Order> orders = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+	private List<Order> orders = new ArrayList<>();
 	
 	
 	

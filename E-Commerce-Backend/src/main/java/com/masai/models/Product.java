@@ -4,14 +4,13 @@ package com.masai.models;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,7 +39,8 @@ public class Product {
 
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
 //	@ManyToMany(cascade = CascadeType.ALL)
 //	private Order order;
