@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.masai.exception.CategoryNotFoundException;
 import com.masai.exception.ProductNotFoundException;
-import com.masai.models.Category;
+
+import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
 import com.masai.repository.ProductDao;
@@ -81,15 +83,15 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public List<ProductDTO> getProductsOfCategory(Integer id) {
-
-		List<ProductDTO> list = prodDao.getAllProductsInACategory(id);
+	public List<ProductDTO> getProductsOfCategory(CategoryEnum catenum) {
+		
+		List<ProductDTO> list = prodDao.getAllProductsInACategory(catenum);
 		if(list.size()>0) {
 			
 			return list;
 		}
 		else
-			throw new ProductNotFoundException("No products found with category Id:"+id);
+			throw new CategoryNotFoundException("No products found with category:"+catenum);
 	}
 
 	
