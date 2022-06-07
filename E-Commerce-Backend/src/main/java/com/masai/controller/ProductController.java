@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.masai.models.Category;
+import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
-import com.masai.service.CategoryService;
+import com.masai.models.ProductStatus;
 import com.masai.service.ProductService;
 
 @RestController
@@ -33,6 +34,7 @@ public class ProductController {
 	
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProductToCatalogHandler(@Valid @RequestBody Product product){
+		
 		
 		Product prod = pService.addProductToCatalog(product);
 		
@@ -63,6 +65,8 @@ public class ProductController {
 		return new ResponseEntity<String>(res,HttpStatus.OK);
 	}
 	
+	
+	@PutMapping("/products")
 	public ResponseEntity<Product> updateProductInCatalogHandler(@Valid @RequestBody Product prod){
 		
 				Product prod1 = pService.updateProductIncatalog(prod);
@@ -79,14 +83,23 @@ public class ProductController {
 		return new ResponseEntity<List<Product>>(list,HttpStatus.OK);
 	}
 	
-	@GetMapping("/products1/{id}")
-	public ResponseEntity<List<ProductDTO>> getAllProductsInCategory(@PathVariable("id") Integer id){
-		
-		List<ProductDTO> list = pService.getProductsOfCategory(id);
+	@GetMapping("/products/{catenum}")
+	public ResponseEntity<List<ProductDTO>> getAllProductsInCategory(@PathVariable("catenum") String catenum){
+		CategoryEnum ce = CategoryEnum.valueOf(catenum.toUpperCase());
+		List<ProductDTO> list = pService.getProductsOfCategory(ce);
 		return new ResponseEntity<List<ProductDTO>>(list,HttpStatus.OK);
 		
 	}
 	
+	@GetMapping("/products/status/{status}")
+	public ResponseEntity<List<ProductDTO>> getProductsWithStatusHandler(@PathVariable("status") String status){
+		
+		ProductStatus ps = ProductStatus.valueOf(status.toUpperCase());
+		List<ProductDTO> list = pService.getProductsOfStatus(ps);
+		
+		return new ResponseEntity<List<ProductDTO>>(list,HttpStatus.OK);
+		
+	}
 	
 	
 	

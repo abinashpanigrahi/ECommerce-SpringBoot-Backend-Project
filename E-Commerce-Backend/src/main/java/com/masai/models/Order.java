@@ -31,13 +31,14 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer orderId;
 	@PastOrPresent
-	LocalDate date;
+	private LocalDate date;
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private OrderStatusValues orderStatus;
 	@NotNull
 	private Double total;
-	private Long cardNumber;
+	@NotNull
+	private String cardNumber;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "customer_id", referencedColumnName = "customerId")
