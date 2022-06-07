@@ -10,9 +10,13 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+=======
+import javax.validation.constraints.Size;
+>>>>>>> main
 =======
 import javax.validation.constraints.Size;
 >>>>>>> main
@@ -63,6 +67,7 @@ public class Product {
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Category category;
 //	@ManyToMany(cascade = CascadeType.ALL)
@@ -72,6 +77,8 @@ public class Product {
 	private Seller seller;
 	
 	
+=======
+>>>>>>> main
 =======
 >>>>>>> main
 
