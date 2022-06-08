@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.masai.exception.CustomerNotFoundException;
 import com.masai.models.Customer;
 import com.masai.models.Order;
+import com.masai.models.Product;
 
 @Repository
 public interface OrderDao extends JpaRepository<Order, Integer> {
@@ -21,5 +22,7 @@ public interface OrderDao extends JpaRepository<Order, Integer> {
 	
 	@Query("select c from Customer c where c.customerId = customerId")
 	public Customer getCustomerByOrderid(@Param("customerId") Integer customerId);
+	
+//	public List<Product> getListOfProductsByOrderId(Integer OrderId);
 	
 }

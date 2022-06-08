@@ -1,9 +1,6 @@
 package com.masai.models;
 
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,10 +47,10 @@ public class Seller {
 	@Column(unique = true)
 	private String emailId;
 	
-	
-	@OneToMany(cascade = CascadeType.ALL)
+
+	@OneToMany
 	@JsonIgnore
-	private Set<Product> sellerProducts = new HashSet<>();
+	private List<Product> product;
 	
-	
+
 }

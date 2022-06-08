@@ -11,7 +11,7 @@ import com.masai.models.Order;
 import com.masai.models.OrderDTO;
 
 public interface OrderService {
-	public Order saveOrder(OrderDTO odto,String token) throws LoginException;
+	public Order saveOrder(OrderDTO odto,String token) throws LoginException, OrderException;
 	
 	public Order getOrderByOrderId(Integer OrderId) throws OrderException;
 	
@@ -26,4 +26,5 @@ public interface OrderService {
 	public Customer getCustomerByOrderid(Integer orderId) throws OrderException;
 	
 	//public Customer getCustomerIdByToken(String token) throws CustomerNotFoundException;
+	
 }
