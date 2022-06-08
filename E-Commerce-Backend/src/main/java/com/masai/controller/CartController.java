@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.models.Cart;
 import com.masai.models.CartDTO;
-import com.masai.models.Product;
+import com.masai.models.CartItem;
 import com.masai.repository.CartDao;
 import com.masai.repository.CustomerDao;
 import com.masai.service.CartService;
@@ -42,17 +41,17 @@ public class CartController {
 	
 //	
 	@GetMapping(value = "/cart")
-	public ResponseEntity<List<Product>> getCartProductHandler(@RequestHeader("token")String token){
+	public ResponseEntity<List<CartItem>> getCartProductHandler(@RequestHeader("token")String token){
 		
-		List<Product> cartProducts=cartService.getCartProduct(token);
-		return new ResponseEntity<List<Product>>(cartProducts,HttpStatus.ACCEPTED);
+		List<CartItem> cartProducts=cartService.getCartProduct(token);
+		return new ResponseEntity<List<CartItem>>(cartProducts,HttpStatus.ACCEPTED);
 	}
 	
 	
 	@DeleteMapping(value = "/cart")
-	public ResponseEntity<Cart> addProductToCartHander(@RequestBody Product product ,@RequestHeader("token")String token){
+	public ResponseEntity<Cart> removeProductFromCartHander(@RequestBody CartDTO cartdto ,@RequestHeader("token")String token){
 		
-		Cart cart = cartService.removeProductFromCart(product, token);
+		Cart cart = cartService.removeProductFromCart(cartdto, token);
 		return new ResponseEntity<Cart>(cart,HttpStatus.OK);
 	}
 	

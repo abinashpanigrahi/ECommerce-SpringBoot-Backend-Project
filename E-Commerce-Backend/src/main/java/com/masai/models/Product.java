@@ -1,5 +1,8 @@
 package com.masai.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -61,8 +63,8 @@ public class Product {
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	private Seller seller;
 
-//	@ManyToOne(cascade = CascadeType.ALL)
+//	@ManyToMany
 //	@JsonIgnore
-//	private Cart cart;
+//	private List<Cart> productCarts = new ArrayList<>();
 
 }

@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		System.out.println(c);
 		
-		System.out.println(c.getProducts().size());
+//		System.out.println(c.getProducts().size());
 		
 		customer.setCustomerCart(c);
 		

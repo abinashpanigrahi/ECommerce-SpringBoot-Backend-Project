@@ -9,9 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,16 +29,21 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer cartId;
 
+//	@JsonIgnoreProperties(allowSetters = true, value = {"quantity"})
+//	@ManyToMany
+//	@JoinTable(name = "cart_product_mapping",
+//	joinColumns = {
+//			@JoinColumn(name = "cart_id", referencedColumnName = "cartId")
+//	},
+//	inverseJoinColumns = {
+//			@JoinColumn(name = "product_id", referencedColumnName = "productId")
+//	})
+//	private List<Product> products = new ArrayList<>();
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "cart_product_mapping",
-	joinColumns = {
-			@JoinColumn(name = "cart_id", referencedColumnName = "cartId")
-	},
-	inverseJoinColumns = {
-			@JoinColumn(name = "product_id", referencedColumnName = "productId")
-	})
-	private List<Product> products = new ArrayList<>();
+	
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<CartItem> cartItems = new ArrayList<>();
 	
 	private Double cartTotal;
 	

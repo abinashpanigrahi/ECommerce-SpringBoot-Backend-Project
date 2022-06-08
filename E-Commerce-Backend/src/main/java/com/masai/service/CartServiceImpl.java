@@ -1,5 +1,6 @@
 package com.masai.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import com.masai.exception.LoginException;
 import com.masai.exception.ProductNotFoundException;
 import com.masai.models.Cart;
 import com.masai.models.CartDTO;
+import com.masai.models.CartItem;
 import com.masai.models.Customer;
 import com.masai.models.Product;
 import com.masai.models.UserSession;
@@ -28,6 +30,9 @@ public class CartServiceImpl implements CartService {
 	
 	@Autowired
 	private SessionDao sessionDao;
+	
+	@Autowired
+	private CartItemService cartItemService;
 	
 	
 	@Autowired
@@ -89,42 +94,70 @@ public class CartServiceImpl implements CartService {
 		
 		copyProduct.setQuantity(1);
 		
-			
-		List<Product> cartProducts = existingCustomer.getCustomerCart().getProducts();
+		System.out.println("copy product " + copyProduct);
 		
-		if(cartProducts.size() == 0) {
-			cartProducts.add(copyProduct);
-			existingCustomer.getCustomerCart().setProducts(cartProducts);
-			System.out.println(existingCustomer);
-			cartDao.save(existingCustomer.getCustomerCart());
-			return  existingCustomer.getCustomerCart();
+		List<CartItem> cartItems = existingCustomer.getCustomerCart().getCartItems();
+		
+		CartItem item = cartItemService.createItemforCart(cartDto);
+		
+		
+		if(cartItems.size() == 0) {
+			cartItems.add(item);
 		}
-			
 		else {
-		
-			for(Product existing : cartProducts) {
-				if(copyProduct.getProductId() == existing.getProductId()) {
-					existing.setQuantity(existing.getQuantity() + 1);
-					existingCustomer.getCustomerCart().setProducts(cartProducts);
-					cartDao.save(existingCustomer.getCustomerCart());
-					return  existingCustomer.getCustomerCart();
-					
+			boolean flag = false;
+			for(CartItem c: cartItems) {
+				if(c.getCartProduct().getProductId() == cartDto.getProductId()) {
+					c.setCartItemQuantity(c.getCartItemQuantity() + 1);
+					flag = true;
 				}
+			}
+			if(!flag) {
+				cartItems.add(item);
 			}
 		}
 		
-		System.out.println(existingCustomer);
+		return cartDao.save(existingCustomer.getCustomerCart());
 		
-		cartProducts.add(copyProduct);
-		existingCustomer.getCustomerCart().setProducts(cartProducts);
-		cartDao.save(existingCustomer.getCustomerCart());
-		return  existingCustomer.getCustomerCart();
+			
+//		List<Product> cartProducts = existingCustomer.getCustomerCart().getProducts();
+//		
+//		cartProducts.forEach(System.out::println);
+//		
+//		if(cartProducts.size() == 0) {
+//			cartProducts.add(copyProduct);
+//			existingCustomer.getCustomerCart().setProducts(cartProducts);
+//			System.out.println(existingCustomer);
+//			cartDao.save(existingCustomer.getCustomerCart());
+//			return  existingCustomer.getCustomerCart();
+//		}
+//		else {
+//		
+//			for(Product existing : cartProducts) {
+//				if(copyProduct.getProductId() == existing.getProductId()) {
+//					System.out.println("Existing " + existing.getProductName() + existing.getQuantity());
+//					existing.setQuantity(existing.getQuantity() + 1);
+//					System.out.println("Existing " + existing.getProductName() + existing.getQuantity());
+//					existingCustomer.getCustomerCart().setProducts(cartProducts);
+//					cartDao.save(existingCustomer.getCustomerCart());
+//					return  existingCustomer.getCustomerCart();
+//					
+//				}
+//			}
+//		}
+//		
+//		System.out.println(existingCustomer);
+//		
+//		cartProducts.add(copyProduct);
+//		existingCustomer.getCustomerCart().setProducts(cartProducts);
+//		cartDao.save(existingCustomer.getCustomerCart());
+//		return  existingCustomer.getCustomerCart();
 	}
 	
 	
 
 	@Override
-	public List<Product> getCartProduct(String token) {
+	public List<CartItem> getCartProduct(String token) {
 		if(token.contains("customer") == false) {
 			throw new LoginException("Invalid session token for customer");
 		}
@@ -152,15 +185,16 @@ public class CartServiceImpl implements CartService {
 		if(optCart.isEmpty()) {
 			throw new CartItemNotFound("cart Not found by Id");
 		}
-		return optCart.get().getProducts();
+//		return optCart.get().getProducts();
 		
+		return optCart.get().getCartItems();
 //		return cart.getProducts();
 	}
 
 	
 	
 	@Override
-	public Cart removeProductFromCart(Product product, String token) {
+	public Cart removeProductFromCart(CartDTO cartDto, String token) {
 		if(token.contains("customer") == false) {
 			throw new LoginException("Invalid session token for customer");
 		}
@@ -184,15 +218,31 @@ public class CartServiceImpl implements CartService {
 //		Cart cart=optCart.get();
 //	}
 		
-		List<Product> cartProducts = existingCustomer.getCustomerCart().getProducts();
+//		Product product = productDao.findById(cartDto.getProductId()).orElseThrow( () -> new ProductNotFoundException("Product not found"));
+//		
+//		System.out.println("Product found " + product);
+//		
+//		List<Product> cartProducts = existingCustomer.getCustomerCart().getProducts();
+//		
+//		for(Integer i = 0; i<cartProducts.size(); i++) {
+//			if(cartProducts.get(i).getProductId() == product.getProductId()) {
+//				cartProducts.remove(i);
+//			}
+//		}
+//		
+//		existingCustomer.getCustomerCart().setProducts(cartProducts);
 		
-		for(Product existing : cartProducts) {
-			if(product.getProductId() == existing.getProductId()) {
-				cartProducts.remove(existing);
-			}
-		}
+//		for(Product existing : cartProducts) {
+//			System.out.println("Existing Product " + existing);
+//			if(product.getProductId() == existing.getProductId()) {
+//				cartProducts.remove(existing);
+//			}
+//		}
+//		
+		
+		Cart customerCart = existingCustomer.getCustomerCart();
+		
+		
 		return cartDao.save(existingCustomer.getCustomerCart());
-		
-		
 	}
 }
