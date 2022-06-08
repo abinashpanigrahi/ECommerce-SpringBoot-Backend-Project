@@ -1,5 +1,6 @@
 package com.masai.models;
 
+import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
@@ -16,8 +17,8 @@ import lombok.ToString;
 public class OrderDTO {
 	
 	@NotNull
-	@CreditCardNumber
-	private String cardNumber;
+	@Embedded
+	private CreditCard cardNumber;
 	@NotNull
 	private String addressType;
 }
