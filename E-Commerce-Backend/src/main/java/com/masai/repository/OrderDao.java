@@ -18,8 +18,8 @@ import com.masai.models.Product;
 public interface OrderDao extends JpaRepository<Order, Integer> {
 	public List<Order> findByDate(LocalDate date);
 	
-//	@Query("select new com.masai.model.Order")
-//	public List<Order> getListOfOrdersByCustomerid(Integer customerId);
+//	@Query("select c.orders from Customer c where c.customerId = customerId")
+//	public List<Order> getListOfOrdersByCustomerid(@Param("customerId") Integer customerId);
 	
 	@Query("select c from Customer c where c.customerId = customerId")
 	public Customer getCustomerByOrderid(@Param("customerId") Integer customerId);

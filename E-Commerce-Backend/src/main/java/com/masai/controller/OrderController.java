@@ -63,10 +63,10 @@ public class OrderController {
 		return oService.cancelOrderByOrderId(orderId);
 	}
 	
-	@PutMapping("/order")
-	public ResponseEntity<Order> updateOrderByOrder(@Valid @RequestBody Order order){
+	@PutMapping("/orders/{orderId}")
+	public ResponseEntity<Order> updateOrderByOrder(@Valid @RequestBody OrderDTO orderdto, @PathVariable("orderId") Integer orderId,@RequestHeader("token") String token){
 		
-		Order updatedOrder= oService.updateOrderByOrder(order);
+		Order updatedOrder= oService.updateOrderByOrder(orderdto,orderId,token);
 		
 		return new ResponseEntity<Order>(updatedOrder,HttpStatus.ACCEPTED);
 	}

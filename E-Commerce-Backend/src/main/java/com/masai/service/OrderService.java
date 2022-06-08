@@ -19,7 +19,7 @@ public interface OrderService {
 	
 	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException;
 	
-	public Order updateOrderByOrder(Order order) throws OrderException;
+	public Order updateOrderByOrder(OrderDTO order,Integer OrderId,String token) throws OrderException,LoginException;
 	
 	public List<Order> getAllOrdersByDate(LocalDate date) throws OrderException;
 

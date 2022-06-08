@@ -17,6 +17,7 @@ import com.masai.models.Order;
 import com.masai.models.OrderDTO;
 import com.masai.models.OrderStatusValues;
 import com.masai.models.Product;
+import com.masai.models.ProductStatus;
 import com.masai.repository.OrderDao;
 
 @Service
@@ -36,8 +37,10 @@ public class OrderServiceImpl implements OrderService {
 		
 		Order newOrder= new Order();
 		
-		if(cs !=null) {
-			Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
+		Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
+		
+		if(loggedInCustomer != null) {
+			//Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
 			newOrder.setCustomer(loggedInCustomer);
 			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
 			String userGivenCardNumber= odto.getCardNumber().getCardNumber();
@@ -47,25 +50,27 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setOrdercartItems(productsInOrder);
 			newOrder.setTotal(loggedInCustomer.getCustomerCart().getCartTotal());
 			
-			//System.out.println(newOrder);
+			
 			
 			if(productsInCart.size()!=0) {
 				if(usersCardNumber.equals(userGivenCardNumber)) {
 					
+					//System.out.println(usersCardNumber);
 					newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
 					newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
+					System.out.println(usersCardNumber);
 					List<CartItem> cartItemsList= loggedInCustomer.getCustomerCart().getCartItems();
 					
 					for(CartItem cartItem : cartItemsList ) {
 						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
 						cartItem.getCartProduct().setQuantity(remainingQuantity);
-//						CartDTO cdto = new CartDTO();
-//						cdto.setProductId(cartItem.getCartProduct().getProductId());
-//						cartservicei.removeProductFromCart(cdto, token);
+						if(cartItem.getCartProduct().getQuantity()==0) {
+							cartItem.getCartProduct().setStatus(ProductStatus.OUTOFSTOCK);
+						}
 					}
-			
+					cartservicei.clearCart(token);
 					//System.out.println(newOrder);
 					return oDao.save(newOrder);
 				}
@@ -75,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
 					newOrder.setOrderStatus(OrderStatusValues.PENDING);
+					cartservicei.clearCart(token);
 					return oDao.save(newOrder);
 					
 				}
@@ -108,14 +114,46 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException {
 		Order order= oDao.findById(OrderId).orElseThrow(()->new OrderException("No order exists with given OrderId "+ OrderId));
-		oDao.deleteById(OrderId);
+		order.setOrderStatus(OrderStatusValues.CANCELLED);
+		oDao.save(order);
 		return order;
 	}
 
 	@Override
-	public Order updateOrderByOrder(Order order) throws OrderException {
-		Order existingOrder= oDao.findById(order.getOrderId()).orElseThrow(()->new OrderException("No order exists with given OrderId "+ order.getOrderId()));
-		return oDao.save(order);
+	public Order updateOrderByOrder(OrderDTO orderdto, Integer OrderId,String token) throws OrderException,LoginException {
+		Order existingOrder= oDao.findById(OrderId).orElseThrow(()->new OrderException("No order exists with given OrderId "+ OrderId));
+		
+		if(existingOrder.getCustomer().getCustomerId()==cs.getLoggedInCustomerDetails(token).getCustomerId()) {
+			//existingOrder.setCardNumber(orderdto.getCardNumber().getCardNumber());
+			//existingOrder.setAddress(existingOrder.getCustomer().getAddress().get(orderdto.getAddressType()));
+			Customer loggedInCustomer = cs.getLoggedInCustomerDetails(token);
+			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
+			String userGivenCardNumber= orderdto.getCardNumber().getCardNumber();
+//			System.out.println(loggedInCustomer);
+			if(usersCardNumber.equals(userGivenCardNumber)) {
+				existingOrder.setCardNumber(orderdto.getCardNumber().getCardNumber());
+				existingOrder.setAddress(existingOrder.getCustomer().getAddress().get(orderdto.getAddressType()));
+				existingOrder.setOrderStatus(OrderStatusValues.SUCCESS);
+				List<CartItem> cartItemsList= loggedInCustomer.getCustomerCart().getCartItems();
+				for(CartItem cartItem : cartItemsList ) {
+					Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
+					cartItem.getCartProduct().setQuantity(remainingQuantity);
+					if(cartItem.getCartProduct().getQuantity()==0) {
+						cartItem.getCartProduct().setStatus(ProductStatus.OUTOFSTOCK);
+					}
+				}
+				return oDao.save(existingOrder);
+			}
+			else {
+				throw new OrderException("Incorrect Card Number Again" + usersCardNumber + userGivenCardNumber);
+			}
+			
+			
+		}
+		else {
+			throw new LoginException("Invalid session token for customer"+"Kindly Login");
+		}
+		
 	}
 
 	@Override
