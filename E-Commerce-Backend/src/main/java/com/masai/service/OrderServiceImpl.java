@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.masai.exception.CustomerNotFoundException;
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderException;
 import com.masai.models.Customer;
@@ -25,12 +24,11 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private CustomerService cs;
 	
-	@Autowired
-	private Order newOrder;
 	
 	@Override
 	public Order saveOrder(OrderDTO odto,String token) throws LoginException, OrderException {
 		
+		Order newOrder= new Order();
 		
 		if(cs !=null) {
 			Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
