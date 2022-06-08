@@ -14,6 +14,7 @@ import com.masai.models.Customer;
 import com.masai.models.Order;
 import com.masai.models.OrderDTO;
 import com.masai.models.OrderStatusValues;
+import com.masai.models.Product;
 import com.masai.repository.OrderDao;
 
 @Service
@@ -21,22 +22,46 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private OrderDao oDao;
 	
+	@Autowired
+	private CustomerService cs;
+	
+	@Autowired
+	private Order newOrder;
+	
 	@Override
-	public Order saveOrder(OrderDTO odto,String token) throws LoginException {
+	public Order saveOrder(OrderDTO odto,String token) throws LoginException, OrderException {
 		
-		Order newOrder= new Order();
-		
-		CustomerService cs= new CustomerServiceImpl();
 		
 		if(cs !=null) {
 			Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
 			newOrder.setCustomer(loggedInCustomer);
-			newOrder.setCardNumber(odto.getCardNumber());
-			newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
-			newOrder.setDate(LocalDate.now());
-			newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
-			newOrder.setTotal(10000.00);
-			return oDao.save(newOrder);
+			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
+			String userGivenCardNumber= odto.getCardNumber().getCardNumber();
+			List<Product> productsInCart= loggedInCustomer.getCustomerCart().getProducts();
+			newOrder.setProducts(productsInCart);
+			newOrder.setTotal(loggedInCustomer.getCustomerCart().getCartTotal());
+			
+			if(productsInCart.size()!=0) {
+				if(usersCardNumber.equals(userGivenCardNumber)) {
+					newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
+					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
+					newOrder.setDate(LocalDate.now());
+					newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
+					return oDao.save(newOrder);
+				}
+				else {
+					newOrder.setCardNumber(null);
+					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
+					newOrder.setDate(LocalDate.now());
+					newOrder.setOrderStatus(OrderStatusValues.PENDING);
+					return oDao.save(newOrder);
+					
+				}
+			}
+			else {
+				throw new OrderException("No products in Cart");
+			}
+			
 		}
 		else {
 			throw new LoginException("Invalid session token for customer"+"Kindly Login");
