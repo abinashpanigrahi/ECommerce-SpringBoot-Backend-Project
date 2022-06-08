@@ -20,6 +20,7 @@ import com.masai.models.CreditCard;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
+import com.masai.models.Order;
 import com.masai.models.SessionDTO;
 import com.masai.service.CustomerService;
 
@@ -91,5 +92,12 @@ public class CustomerController {
 	@DeleteMapping("/customer")
 	public ResponseEntity<SessionDTO> deleteCustomerHandler(@Valid @RequestBody CustomerDTO customerDto, @RequestHeader("token") String token){
 		return new ResponseEntity<>(customerService.deleteCustomer(customerDto, token), HttpStatus.ACCEPTED);
+	}
+	
+	
+	
+	@GetMapping("/customer/orders")
+	public ResponseEntity<List<Order>> getCustomerOrdersHandler(@RequestHeader("token") String token){
+		return new ResponseEntity<>(customerService.getCustomerOrders(token), HttpStatus.ACCEPTED);
 	}
 }
