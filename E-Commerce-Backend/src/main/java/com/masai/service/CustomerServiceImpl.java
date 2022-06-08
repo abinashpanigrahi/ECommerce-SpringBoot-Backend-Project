@@ -386,6 +386,34 @@ public class CustomerServiceImpl implements CustomerService{
 
 
 
+	@Override
+	public List<Order> getCustomerOrders(String token) throws CustomerException {
+		
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+		
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		List<Order> myOrders = existingCustomer.getOrders();
+		
+		if(myOrders.size() == 0)
+			throw new CustomerException("No orders found");
+		
+		return myOrders;
+	}
+
+
+
 	
 	
 	
