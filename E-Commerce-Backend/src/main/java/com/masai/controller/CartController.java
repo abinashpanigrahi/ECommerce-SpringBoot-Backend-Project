@@ -54,6 +54,10 @@ public class CartController {
 	}
 	
 	
+	@DeleteMapping(value = "/cart/clear")
+	public ResponseEntity<Cart> clearCartHandler(@RequestHeader("token") String token){
+		return new ResponseEntity<>(cartService.clearCart(token), HttpStatus.ACCEPTED);
+	}
 	
 	
 }
