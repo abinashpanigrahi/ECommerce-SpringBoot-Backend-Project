@@ -13,11 +13,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import javax.validation.constraints.Size;
-
->>>>>>> main
 =======
 import javax.validation.constraints.Size;
 
@@ -75,7 +70,6 @@ public class Product {
 //	private Cart cart;
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 	@ManyToOne(cascade = CascadeType.ALL)
 	private CategoryEnum category;
 //	@ManyToMany(cascade = CascadeType.ALL)
@@ -85,8 +79,6 @@ public class Product {
 	private Seller seller;
 	
 	
-=======
->>>>>>> main
 =======
 >>>>>>> main
 =======
