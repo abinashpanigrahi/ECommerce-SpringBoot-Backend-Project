@@ -61,9 +61,9 @@ public class OrderServiceImpl implements OrderService {
 					for(CartItem cartItem : cartItemsList ) {
 						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
 						cartItem.getCartProduct().setQuantity(remainingQuantity);
-						CartDTO cdto = new CartDTO();
-						cdto.setProductId(cartItem.getCartProduct().getProductId());
-						cartservicei.removeProductFromCart(cdto, token);
+//						CartDTO cdto = new CartDTO();
+//						cdto.setProductId(cartItem.getCartProduct().getProductId());
+//						cartservicei.removeProductFromCart(cdto, token);
 					}
 			
 					//System.out.println(newOrder);
