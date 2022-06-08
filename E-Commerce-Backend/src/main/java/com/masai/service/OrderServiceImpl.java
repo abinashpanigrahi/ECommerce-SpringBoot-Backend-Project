@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderException;
+import com.masai.models.CartDTO;
 import com.masai.models.CartItem;
 import com.masai.models.Customer;
 import com.masai.models.Order;
@@ -25,6 +26,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private CustomerService cs;
+	
+	@Autowired
+	private CartServiceImpl cartservicei;
 	
 	
 	@Override
@@ -57,8 +61,12 @@ public class OrderServiceImpl implements OrderService {
 					for(CartItem cartItem : cartItemsList ) {
 						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
 						cartItem.getCartProduct().setQuantity(remainingQuantity);
+						CartDTO cdto = new CartDTO();
+						cdto.setProductId(cartItem.getCartProduct().getProductId());
+						cartservicei.removeProductFromCart(cdto, token);
 					}
-					System.out.println(newOrder);
+			
+					//System.out.println(newOrder);
 					return oDao.save(newOrder);
 				}
 				else {
