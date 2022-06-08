@@ -7,6 +7,7 @@ import com.masai.exception.ProductNotFoundException;
 import com.masai.models.CartDTO;
 import com.masai.models.CartItem;
 import com.masai.models.Product;
+import com.masai.models.ProductStatus;
 import com.masai.repository.ProductDao;
 
 @Service
@@ -19,6 +20,10 @@ public class CartItemServiceImpl implements CartItemService{
 	public CartItem createItemforCart(CartDTO cartdto) {
 		
 		Product existingProduct = productDao.findById(cartdto.getProductId()).orElseThrow( () -> new ProductNotFoundException("Product Not found"));
+		
+		if(existingProduct.getStatus().equals(ProductStatus.OUTOFSTOCK) || existingProduct.getQuantity() == 0) {
+			throw new ProductNotFoundException("Product OUT OF STOCK");
+		}
 		
 		CartItem newItem = new CartItem();
 		

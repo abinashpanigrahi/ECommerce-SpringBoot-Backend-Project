@@ -14,7 +14,7 @@ import com.masai.models.CartItem;
 public interface CartService {
 	
 	public Cart addProductToCart(CartDTO cart, String token) throws CartItemNotFound;
-	public List<CartItem> getCartProduct(String token);
+	public Cart getCartProduct(String token);
 	public Cart removeProductFromCart(CartDTO cartDto,String token) throws ProductNotFound;
 //	public Cart changeQuantity(Product product,Customer customer,Integer quantity);
 	
