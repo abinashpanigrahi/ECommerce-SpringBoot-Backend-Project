@@ -109,7 +109,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public Seller updateSellerMobile(Integer sellerId, String mobile, String token) throws SellerException {
+	public Seller updateSellerMobile(SellerDTO sellerdto, String token) throws SellerException {
 		
 		if(token.contains("seller") == false) {
 			throw new LoginException("Invalid session token for seller");
@@ -119,14 +119,14 @@ public class SellerServiceImpl implements SellerService {
 		
 		UserSession user = sessionDao.findByToken(token).get();
 		
-		Seller existingSeller=sellerDao.findById(sellerId).orElseThrow(()->new SellerException("Seller not found for this ID: "+sellerId));
+		Seller existingSeller=sellerDao.findById(user.getUserId()).orElseThrow(()->new SellerException("Seller not found for this ID: "+ user.getUserId()));
 		
-		if(user.getUserId() == existingSeller.getSellerId()) {
-			existingSeller.setMobile(mobile);
+		if(existingSeller.getPassword().equals(sellerdto.getPassword())) {
+			existingSeller.setMobile(sellerdto.getMobile());
 			return sellerDao.save(existingSeller);
 		}
 		else {
-			throw new SellerException("Error occured in updating mobile");
+			throw new SellerException("Error occured in updating mobile. Please enter correct password");
 		}
 		
 	}
