@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderException;
+import com.masai.models.CartItem;
 import com.masai.models.Customer;
 import com.masai.models.Order;
 import com.masai.models.OrderDTO;
@@ -35,8 +36,8 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setCustomer(loggedInCustomer);
 			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
 			String userGivenCardNumber= odto.getCardNumber().getCardNumber();
-			List<Product> productsInCart= loggedInCustomer.getCustomerCart().getProducts();
-			newOrder.setProducts(productsInCart);
+			List<CartItem> productsInCart= loggedInCustomer.getCustomerCart().getCartItems();
+			newOrder.setCartItems(productsInCart);
 			newOrder.setTotal(loggedInCustomer.getCustomerCart().getCartTotal());
 			
 			if(productsInCart.size()!=0) {
