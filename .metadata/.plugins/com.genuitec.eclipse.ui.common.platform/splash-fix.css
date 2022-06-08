@@ -1,0 +1,7 @@
+#org-eclipse-ui-splash-progressText {
+  color: #445F78;
+}
+
+#org-eclipse-ui-splash-progressPart {
+  background-image: url('me-custom:/platform:/plugin/org.springframework.boot.ide.branding/splash.bmp');
+}
