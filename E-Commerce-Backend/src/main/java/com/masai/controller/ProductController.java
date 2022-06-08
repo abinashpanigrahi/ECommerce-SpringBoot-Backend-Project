@@ -49,7 +49,7 @@ public class ProductController {
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProductToCatalogHandler(@RequestHeader("token") String token,
 			@Valid @RequestBody Product product) {
-		
+
 		
 //		validating the seller and also current login status
 		
@@ -57,8 +57,9 @@ public class ProductController {
 			throw new LoginException("Invalid session token for seller");
 		}
 		loginservice.checkTokenStatus(token);
-
 		
+		Seller seller1 = sService.getCurrentlyLoggedInSeller(token);
+		product.setSeller(seller1);
 //		checking if the seller is already existing in database
 		
 		Seller Existingseller = sService.getSellerByMobile(product.getSeller().getMobile(), token);
@@ -84,8 +85,6 @@ public class ProductController {
 
 	}
 
-	
-	
 	
 	// This method gets the product which needs to be added to the cart returns
 	// product
