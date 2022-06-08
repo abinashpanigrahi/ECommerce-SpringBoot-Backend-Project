@@ -1,6 +1,5 @@
 package com.masai.models;
 
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,6 +47,7 @@ public class Seller {
 	@Column(unique = true)
 	private String emailId;
 	
+
 	@OneToMany
 	@JsonIgnore
 	private List<Product> product;
