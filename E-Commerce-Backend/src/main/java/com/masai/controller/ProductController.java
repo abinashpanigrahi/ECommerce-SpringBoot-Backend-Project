@@ -44,7 +44,7 @@ public class ProductController {
 	private SellerDao sDao;
 
 	// this method adds new product to catalog by seller(if seller is new it adds seller as well
-//	if seller is already existing products will be mapped to same seller) and returns added product
+   //  if seller is already existing products will be mapped to same seller) and returns added product
 
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProductToCatalogHandler(@RequestHeader("token") String token,
