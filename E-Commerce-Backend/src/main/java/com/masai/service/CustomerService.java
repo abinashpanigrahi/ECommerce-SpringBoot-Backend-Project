@@ -9,6 +9,7 @@ import com.masai.models.CreditCard;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
+import com.masai.models.Order;
 import com.masai.models.SessionDTO;
 
 public interface CustomerService {
@@ -32,4 +33,7 @@ public interface CustomerService {
 	public Customer updateAddress(Address address, String type, String token) throws CustomerException;
 	
 	public Customer deleteAddress(String type, String token) throws CustomerException, CustomerNotFoundException;
+
+	public List<Order> getCustomerOrders(String token) throws CustomerException; 
+
 }

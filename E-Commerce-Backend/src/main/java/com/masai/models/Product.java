@@ -49,7 +49,7 @@ public class Product {
 	private String manufacturer;
 
 	@NotNull
-	@Min(value = 1)
+	@Min(value = 0)
 	private Integer quantity;
 
 	@Enumerated(EnumType.STRING)

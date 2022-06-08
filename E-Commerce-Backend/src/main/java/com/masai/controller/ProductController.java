@@ -1,7 +1,6 @@
 package com.masai.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -17,16 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.masai.exception.LoginException;
 import com.masai.models.CategoryEnum;
 import com.masai.models.Product;
 import com.masai.models.ProductDTO;
 import com.masai.models.ProductStatus;
-import com.masai.models.Seller;
-import com.masai.repository.SellerDao;
-import com.masai.service.LoginLogoutService;
 import com.masai.service.ProductService;
-import com.masai.service.SellerService;
 
 @RestController
 public class ProductController {
@@ -34,59 +28,21 @@ public class ProductController {
 	@Autowired
 	private ProductService pService;
 
-	@Autowired
-	private LoginLogoutService loginservice;
-
-	@Autowired
-	private SellerService sService;
-
-	@Autowired
-	private SellerDao sDao;
-
-	// this method adds new product to catalog by seller(if seller is new it adds seller as well
-   //  if seller is already existing products will be mapped to same seller) and returns added product
+	// this method adds new product to catalog by seller(if seller is new it adds
+	// seller as well
+	// if seller is already existing products will be mapped to same seller) and
+	// returns added product
 
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProductToCatalogHandler(@RequestHeader("token") String token,
 			@Valid @RequestBody Product product) {
-		
-		
-//		validating the seller and also current login status
-		
-		if (token.contains("seller") == false) {
-			throw new LoginException("Invalid session token for seller");
-		}
-		loginservice.checkTokenStatus(token);
 
-		
-//		checking if the seller is already existing in database
-		
-		Seller Existingseller = sService.getSellerByMobile(product.getSeller().getMobile(), token);
-		Optional<Seller> opt = sDao.findById(Existingseller.getSellerId());
+		Product prod = pService.addProductToCatalog(token, product);
 
-		if (opt.isPresent()) {
-			Seller seller = opt.get();
-
-			product.setSeller(seller);
-
-			Product prod = pService.addProductToCatalog(product);
-
-			seller.getProduct().add(product);
-			sDao.save(seller);
-
-		} else {
-			Product prod = pService.addProductToCatalog(product);
-		}
-		
-//		Product prod = pService.addProductToCatalog(product);
-		
-		return new ResponseEntity<Product>(product, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Product>(prod, HttpStatus.ACCEPTED);
 
 	}
 
-	
-	
-	
 	// This method gets the product which needs to be added to the cart returns
 	// product
 
