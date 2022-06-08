@@ -1,5 +1,6 @@
 package com.masai.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -193,4 +194,43 @@ public class CartServiceImpl implements CartService {
 		
 		return cartDao.save(customerCart);
 	}
+	
+	
+	
+	
+	// Method to clear entire cart
+	
+	@Override
+	public Cart clearCart(String token) {
+		
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+		
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		Cart customerCart = existingCustomer.getCustomerCart();
+		
+		if(customerCart.getCartItems().size() == 0) {
+			throw new CartItemNotFound("Cart already empty");
+		}
+		
+		List<CartItem> emptyCart = new ArrayList<>();
+		
+		customerCart.setCartItems(emptyCart);
+		
+		customerCart.setCartTotal(0.0);
+		
+		return cartDao.save(customerCart);
+	}
+	
 }
