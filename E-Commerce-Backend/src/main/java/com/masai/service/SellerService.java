@@ -23,7 +23,7 @@ public interface SellerService {
 	
 	public Seller updateSeller(Seller seller, String token)throws SellerException;
 	
-	public Seller updateSellerMobile(Integer sellerId, String mobile, String token)throws SellerException;
+	public Seller updateSellerMobile(SellerDTO sellerdto, String token)throws SellerException;
 	
 	public Seller deleteSellerById(Integer sellerId, String token)throws SellerException;
 
