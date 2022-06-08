@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService{
 		Optional<Product> opt =  prodDao.findById(prod.getProductId());
 		
 		if(opt.isPresent()) {
-			opt.get();
+			Product existingProduct = opt.get();
 			Product prod1 = prodDao.save(prod);
 			return prod1;
 		}

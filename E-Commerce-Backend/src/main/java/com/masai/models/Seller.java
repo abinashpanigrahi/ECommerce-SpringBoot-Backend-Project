@@ -1,14 +1,9 @@
 package com.masai.models;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-=======
-import java.util.List;
-
->>>>>>> main
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -55,18 +50,12 @@ public class Seller {
 	@Column(unique = true)
 	private String emailId;
 	
-<<<<<<< HEAD
 	@OneToMany(cascade = CascadeType.ALL)
 	@JsonIgnore
 	List<Product> products= new ArrayList<>();
 	
 	
 	
-=======
-	@OneToMany
-	@JsonIgnore
-	private List<Product> product;
->>>>>>> main
 	
 
 }

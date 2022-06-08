@@ -17,20 +17,12 @@ import com.masai.models.ProductStatus;
 public interface ProductDao extends JpaRepository<Product, Integer> {
 	
 	
-<<<<<<< HEAD
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price) "
-=======
-	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price,p.quantity) "
->>>>>>> main
 			+ "from Product p where p.category=:catenum")
 	public List<ProductDTO> getAllProductsInACategory(@Param("catenum") CategoryEnum catenum);
 	
 	
-<<<<<<< HEAD
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price) "
-=======
-	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price,p.quantity) "
->>>>>>> main
 			+ "from Product p where p.status=:status")
 	public List<ProductDTO> getProductsWithStatus(@Param("status") ProductStatus status);
 	
