@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderException;
+import com.masai.models.CartItem;
 import com.masai.models.Customer;
 import com.masai.models.Order;
 import com.masai.models.OrderDTO;
@@ -35,8 +36,8 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setCustomer(loggedInCustomer);
 			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
 			String userGivenCardNumber= odto.getCardNumber().getCardNumber();
-			List<Product> productsInCart= loggedInCustomer.getCustomerCart().getProducts();
-			newOrder.setProducts(productsInCart);
+			List<CartItem> productsInCart= loggedInCustomer.getCustomerCart().getCartItems();
+			newOrder.setCartItems(productsInCart);
 			newOrder.setTotal(loggedInCustomer.getCustomerCart().getCartTotal());
 			
 			if(productsInCart.size()!=0) {
@@ -45,6 +46,12 @@ public class OrderServiceImpl implements OrderService {
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
 					newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
+					List<CartItem> cartItemsList= loggedInCustomer.getCustomerCart().getCartItems();
+					
+					for(CartItem cartItem : cartItemsList ) {
+						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
+						cartItem.getCartProduct().setQuantity(remainingQuantity);
+					}
 					return oDao.save(newOrder);
 				}
 				else {
@@ -83,9 +90,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order deleteOrderByOrderId(Integer OrderId) throws OrderException {
+	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException {
 		Order order= oDao.findById(OrderId).orElseThrow(()->new OrderException("No order exists with given OrderId "+ OrderId));
-		oDao.delete(order);
+		oDao.deleteById(OrderId);
 		return order;
 	}
 
