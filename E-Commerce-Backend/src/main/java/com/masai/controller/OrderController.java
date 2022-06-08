@@ -60,7 +60,7 @@ public class OrderController {
 	@DeleteMapping("/orders/{orderId}")
 	public Order deleteOrderByOrderId(@PathVariable("orderId") Integer orderId){
 		
-		return oService.deleteOrderByOrderId(orderId);
+		return oService.cancelOrderByOrderId(orderId);
 	}
 	
 	@PutMapping("/order")
