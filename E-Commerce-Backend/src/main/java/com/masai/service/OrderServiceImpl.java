@@ -83,9 +83,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order deleteOrderByOrderId(Integer OrderId) throws OrderException {
+	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException {
 		Order order= oDao.findById(OrderId).orElseThrow(()->new OrderException("No order exists with given OrderId "+ OrderId));
-		oDao.delete(order);
+		oDao.CancelOrderByOrderId(OrderId);
 		return order;
 	}
 
