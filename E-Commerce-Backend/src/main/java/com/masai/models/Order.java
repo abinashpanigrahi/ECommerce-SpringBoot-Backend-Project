@@ -1,6 +1,8 @@
 package com.masai.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,16 +13,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -35,19 +43,22 @@ public class Order {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private OrderStatusValues orderStatus;
-	@NotNull
+	
 	private Double total;
-	@NotNull
+	
 	private String cardNumber;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "customer_id", referencedColumnName = "customerId")
 	private Customer customer;
-//	
-//	@ManyToMany
-//	private List<Product> product;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@OneToMany
+	@JsonIgnore
+	private List<CartItem> ordercartItems = new ArrayList<>();
+	
+	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
 	private Address address;
 }

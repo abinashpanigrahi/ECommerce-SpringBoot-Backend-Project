@@ -9,7 +9,7 @@ import com.masai.models.ProductStatus;
 
 public interface ProductService {
 
-	public Product addProductToCatalog(Product product);
+	public Product addProductToCatalog(String token, Product product);
 
 	public Product getProductFromCatalogById(Integer id);
 

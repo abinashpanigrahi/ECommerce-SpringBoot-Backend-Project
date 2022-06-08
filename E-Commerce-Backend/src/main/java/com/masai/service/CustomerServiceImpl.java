@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,10 +13,12 @@ import com.masai.exception.CustomerException;
 import com.masai.exception.CustomerNotFoundException;
 import com.masai.exception.LoginException;
 import com.masai.models.Address;
+import com.masai.models.Cart;
 import com.masai.models.CreditCard;
 import com.masai.models.Customer;
 import com.masai.models.CustomerDTO;
 import com.masai.models.CustomerUpdateDTO;
+import com.masai.models.Order;
 import com.masai.models.SessionDTO;
 import com.masai.models.UserSession;
 import com.masai.repository.CustomerDao;
@@ -40,6 +43,16 @@ public class CustomerServiceImpl implements CustomerService{
 	public Customer addCustomer(Customer customer) {
 				
 		customer.setCreatedOn(LocalDateTime.now());
+		
+		Cart c = new Cart();
+		
+		System.out.println(c);
+		
+//		System.out.println(c.getProducts().size());
+		
+		customer.setCustomerCart(c);
+		
+		customer.setOrders(new ArrayList<Order>());
 
 		Optional<Customer> existing = customerDao.findByMobileNo(customer.getMobileNo());
 		
@@ -369,6 +382,34 @@ public class CustomerServiceImpl implements CustomerService{
 		existingCustomer.getAddress().remove(type);
 		
 		return customerDao.save(existingCustomer);
+	}
+
+
+
+	@Override
+	public List<Order> getCustomerOrders(String token) throws CustomerException {
+		
+		if(token.contains("customer") == false) {
+			throw new LoginException("Invalid session token for customer");
+		}
+		
+		loginService.checkTokenStatus(token);
+		
+		UserSession user = sessionDao.findByToken(token).get();
+		
+		Optional<Customer> opt = customerDao.findById(user.getUserId());
+		
+		if(opt.isEmpty())
+			throw new CustomerNotFoundException("Customer does not exist");
+		
+		Customer existingCustomer = opt.get();
+		
+		List<Order> myOrders = existingCustomer.getOrders();
+		
+		if(myOrders.size() == 0)
+			throw new CustomerException("No orders found");
+		
+		return myOrders;
 	}
 
 

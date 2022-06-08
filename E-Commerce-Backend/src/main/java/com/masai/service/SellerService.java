@@ -3,7 +3,6 @@ package com.masai.service;
 import java.util.List;
 
 import com.masai.exception.SellerException;
-import com.masai.models.Product;
 import com.masai.models.Seller;
 import com.masai.models.SellerDTO;
 import com.masai.models.SessionDTO;
@@ -24,9 +23,8 @@ public interface SellerService {
 	
 	public Seller updateSeller(Seller seller, String token)throws SellerException;
 	
-	public Seller updateSellerMobile(SellerDTO seller, String token)throws SellerException;
+	public Seller updateSellerMobile(SellerDTO sellerdto, String token)throws SellerException;
 	
 	public Seller deleteSellerById(Integer sellerId, String token)throws SellerException;
-	
 
 }

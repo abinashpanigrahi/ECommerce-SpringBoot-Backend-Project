@@ -1,9 +1,8 @@
 package com.masai.models;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,11 +16,13 @@ import javax.validation.constraints.Pattern;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Seller {
@@ -34,7 +35,7 @@ public class Seller {
 	private String firstName;
 	
 	@NotNull(message="Please enter the last name")
-	@Pattern(regexp="[A-Za-z\\s]+", message="Last Name should contains alphabets only")
+	@Pattern(regexp="[A-Za-z\\s]+", message="First Name should contains alphabets only")
 	private String lastName;
 	
    @Pattern(regexp="[A-Za-z0-9!@#$%^&*_]{8,15}", message="Please Enter a valid Password")
@@ -50,12 +51,10 @@ public class Seller {
 	@Column(unique = true)
 	private String emailId;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+
+	@OneToMany
 	@JsonIgnore
-	List<Product> products= new ArrayList<>();
-	
-	
-	
+	private List<Product> product;
 	
 
 }

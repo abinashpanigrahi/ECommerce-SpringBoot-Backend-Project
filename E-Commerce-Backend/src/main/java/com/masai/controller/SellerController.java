@@ -101,8 +101,8 @@ public class SellerController {
 	
 	
 	@PutMapping("/seller/update/mobile")
-	public ResponseEntity<Seller> updateSellerMobileHandler( @Valid @RequestBody SellerDTO seller, @RequestHeader("token") String token){
-		Seller updatedseller=sService.updateSellerMobile(seller, token);
+	public ResponseEntity<Seller> updateSellerMobileHandler(@Valid @RequestBody SellerDTO sellerdto, @RequestHeader("token") String token){
+		Seller updatedseller=sService.updateSellerMobile(sellerdto, token);
 		
 		return new ResponseEntity<Seller>(updatedseller,HttpStatus.ACCEPTED);
 		
