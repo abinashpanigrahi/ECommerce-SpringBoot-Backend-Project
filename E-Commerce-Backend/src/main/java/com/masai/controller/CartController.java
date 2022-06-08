@@ -41,10 +41,8 @@ public class CartController {
 	
 //	
 	@GetMapping(value = "/cart")
-	public ResponseEntity<List<CartItem>> getCartProductHandler(@RequestHeader("token")String token){
-		
-		List<CartItem> cartProducts=cartService.getCartProduct(token);
-		return new ResponseEntity<List<CartItem>>(cartProducts,HttpStatus.ACCEPTED);
+	public ResponseEntity<Cart> getCartProductHandler(@RequestHeader("token")String token){
+		return new ResponseEntity<>(cartService.getCartProduct(token), HttpStatus.ACCEPTED);
 	}
 	
 	

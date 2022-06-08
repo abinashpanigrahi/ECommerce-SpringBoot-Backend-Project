@@ -60,6 +60,7 @@ public class ProductController {
 
 		
 //		checking if the seller is already existing in database
+		
 		Seller Existingseller = sService.getSellerByMobile(product.getSeller().getMobile(), token);
 		Optional<Seller> opt = sDao.findById(Existingseller.getSellerId());
 
@@ -76,8 +77,9 @@ public class ProductController {
 		} else {
 			Product prod = pService.addProductToCatalog(product);
 		}
-	
-
+		
+//		Product prod = pService.addProductToCatalog(product);
+		
 		return new ResponseEntity<Product>(product, HttpStatus.ACCEPTED);
 
 	}
