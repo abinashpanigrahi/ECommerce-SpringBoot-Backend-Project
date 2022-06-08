@@ -46,6 +46,12 @@ public class OrderServiceImpl implements OrderService {
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
 					newOrder.setOrderStatus(OrderStatusValues.SUCCESS);
+					List<CartItem> cartItemsList= loggedInCustomer.getCustomerCart().getCartItems();
+					
+					for(CartItem cartItem : cartItemsList ) {
+						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
+						cartItem.getCartProduct().setQuantity(remainingQuantity);
+					}
 					return oDao.save(newOrder);
 				}
 				else {
@@ -86,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException {
 		Order order= oDao.findById(OrderId).orElseThrow(()->new OrderException("No order exists with given OrderId "+ OrderId));
-		oDao.CancelOrderByOrderId(OrderId);
+		oDao.deleteById(OrderId);
 		return order;
 	}
 
