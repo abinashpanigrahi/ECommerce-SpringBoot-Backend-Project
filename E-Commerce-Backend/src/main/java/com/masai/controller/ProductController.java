@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import com.masai.exception.LoginException;
+>>>>>>> main
 =======
 import com.masai.exception.LoginException;
 >>>>>>> main
@@ -26,6 +30,12 @@ import com.masai.models.Product;
 import com.masai.models.ProductDTO;
 import com.masai.models.ProductStatus;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import com.masai.models.Seller;
+import com.masai.repository.SellerDao;
+import com.masai.service.LoginLogoutService;
+>>>>>>> main
 =======
 import com.masai.models.Seller;
 import com.masai.repository.SellerDao;
@@ -55,11 +65,15 @@ public class ProductController {
 	@PostMapping("/products")
 	public ResponseEntity<Product> addProductToCatalogHandler(@RequestHeader("token") String token,
 			@Valid @RequestBody Product product) {
+<<<<<<< HEAD
 		
 <<<<<<< HEAD
 		
 		Product prod = pService.addProductToCatalog(product);
 =======
+>>>>>>> main
+=======
+		
 >>>>>>> main
 		
 //		validating the seller and also current login status
@@ -119,6 +133,7 @@ public class ProductController {
 		return new ResponseEntity<String>(res, HttpStatus.OK);
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 	
 	@PutMapping("/products")
@@ -129,6 +144,8 @@ public class ProductController {
 				return new ResponseEntity<Product>(prod1,HttpStatus.OK);
 		
 =======
+=======
+>>>>>>> main
 
 	@PutMapping("/products")
 	public ResponseEntity<Product> updateProductInCatalogHandler(@Valid @RequestBody Product prod) {
@@ -137,6 +154,9 @@ public class ProductController {
 
 		return new ResponseEntity<Product>(prod1, HttpStatus.OK);
 
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> main
 	}
 
@@ -146,6 +166,7 @@ public class ProductController {
 		List<Product> list = pService.getAllProductsIncatalog();
 
 		return new ResponseEntity<List<Product>>(list, HttpStatus.OK);
+<<<<<<< HEAD
 	}
 <<<<<<< HEAD
 	
@@ -178,6 +199,17 @@ public class ProductController {
 		return new ResponseEntity<List<ProductDTO>>(list, HttpStatus.OK);
 
 	}
+=======
+	}
+
+	@GetMapping("/products/{catenum}")
+	public ResponseEntity<List<ProductDTO>> getAllProductsInCategory(@PathVariable("catenum") String catenum) {
+		CategoryEnum ce = CategoryEnum.valueOf(catenum.toUpperCase());
+		List<ProductDTO> list = pService.getProductsOfCategory(ce);
+		return new ResponseEntity<List<ProductDTO>>(list, HttpStatus.OK);
+
+	}
+>>>>>>> main
 
 	@GetMapping("/products/status/{status}")
 	public ResponseEntity<List<ProductDTO>> getProductsWithStatusHandler(@PathVariable("status") String status) {
@@ -189,5 +221,8 @@ public class ProductController {
 
 	}
 
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> main
 }

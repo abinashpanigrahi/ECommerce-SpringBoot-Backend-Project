@@ -1,10 +1,15 @@
 package com.masai.models;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+=======
+import java.util.List;
+
+>>>>>>> main
 =======
 import java.util.List;
 
@@ -56,12 +61,18 @@ public class Seller {
 	private String emailId;
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@OneToMany(cascade = CascadeType.ALL)
 	@JsonIgnore
 	List<Product> products= new ArrayList<>();
 	
 	
 	
+=======
+	@OneToMany
+	@JsonIgnore
+	private List<Product> product;
+>>>>>>> main
 =======
 	@OneToMany
 	@JsonIgnore

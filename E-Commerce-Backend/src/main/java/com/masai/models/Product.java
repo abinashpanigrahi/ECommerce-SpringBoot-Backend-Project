@@ -12,6 +12,11 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import javax.validation.constraints.Size;
+
+>>>>>>> main
 =======
 import javax.validation.constraints.Size;
 
@@ -64,6 +69,7 @@ public class Product {
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@ManyToOne(cascade = CascadeType.ALL)
 	private CategoryEnum category;
 //	@ManyToMany(cascade = CascadeType.ALL)
@@ -73,6 +79,8 @@ public class Product {
 	private Seller seller;
 	
 	
+=======
+>>>>>>> main
 =======
 >>>>>>> main
 

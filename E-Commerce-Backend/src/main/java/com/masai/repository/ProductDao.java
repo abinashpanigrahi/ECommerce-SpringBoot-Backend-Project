@@ -18,7 +18,11 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
 	
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price) "
+=======
+	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price,p.quantity) "
+>>>>>>> main
 =======
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price,p.quantity) "
 >>>>>>> main
@@ -27,7 +31,11 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
 	
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price) "
+=======
+	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price,p.quantity) "
+>>>>>>> main
 =======
 	@Query("select new com.masai.models.ProductDTO(p.productName,p.manufacturer,p.price,p.quantity) "
 >>>>>>> main
