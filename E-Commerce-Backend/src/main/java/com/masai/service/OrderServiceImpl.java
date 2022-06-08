@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.masai.exception.LoginException;
 import com.masai.exception.OrderException;
+import com.masai.models.CartDTO;
 import com.masai.models.CartItem;
 import com.masai.models.Customer;
 import com.masai.models.Order;
@@ -25,6 +27,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private CustomerService cs;
 	
+	@Autowired
+	private CartServiceImpl cartservicei;
+	
 	
 	@Override
 	public Order saveOrder(OrderDTO odto,String token) throws LoginException, OrderException {
@@ -37,11 +42,16 @@ public class OrderServiceImpl implements OrderService {
 			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
 			String userGivenCardNumber= odto.getCardNumber().getCardNumber();
 			List<CartItem> productsInCart= loggedInCustomer.getCustomerCart().getCartItems();
-			newOrder.setCartItems(productsInCart);
+			List<CartItem> productsInOrder = new ArrayList<>(productsInCart);
+			
+			newOrder.setOrdercartItems(productsInOrder);
 			newOrder.setTotal(loggedInCustomer.getCustomerCart().getCartTotal());
+			
+			//System.out.println(newOrder);
 			
 			if(productsInCart.size()!=0) {
 				if(usersCardNumber.equals(userGivenCardNumber)) {
+					
 					newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
@@ -51,10 +61,16 @@ public class OrderServiceImpl implements OrderService {
 					for(CartItem cartItem : cartItemsList ) {
 						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
 						cartItem.getCartProduct().setQuantity(remainingQuantity);
+						CartDTO cdto = new CartDTO();
+						cdto.setProductId(cartItem.getCartProduct().getProductId());
+						cartservicei.removeProductFromCart(cdto, token);
 					}
+			
+					//System.out.println(newOrder);
 					return oDao.save(newOrder);
 				}
 				else {
+					System.out.println("Not same");
 					newOrder.setCardNumber(null);
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
