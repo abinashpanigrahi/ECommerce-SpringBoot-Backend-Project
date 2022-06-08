@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,19 +40,22 @@ public class Order {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private OrderStatusValues orderStatus;
-	@NotNull
+	
 	private Double total;
-	@NotNull
+	
 	private String cardNumber;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "customer_id", referencedColumnName = "customerId")
 	private Customer customer;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<CartItem> cartItems = new ArrayList<>();
+	@OneToMany
+	@JsonIgnore
+	private List<CartItem> ordercartItems = new ArrayList<>();
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
 	private Address address;
 }

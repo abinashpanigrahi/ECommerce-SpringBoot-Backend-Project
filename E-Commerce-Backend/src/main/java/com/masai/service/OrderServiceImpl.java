@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,11 +38,16 @@ public class OrderServiceImpl implements OrderService {
 			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
 			String userGivenCardNumber= odto.getCardNumber().getCardNumber();
 			List<CartItem> productsInCart= loggedInCustomer.getCustomerCart().getCartItems();
-			newOrder.setCartItems(productsInCart);
+			List<CartItem> productsInOrder = new ArrayList<>(productsInCart);
+			
+			newOrder.setOrdercartItems(productsInOrder);
 			newOrder.setTotal(loggedInCustomer.getCustomerCart().getCartTotal());
+			
+			//System.out.println(newOrder);
 			
 			if(productsInCart.size()!=0) {
 				if(usersCardNumber.equals(userGivenCardNumber)) {
+					
 					newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
@@ -52,9 +58,11 @@ public class OrderServiceImpl implements OrderService {
 						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
 						cartItem.getCartProduct().setQuantity(remainingQuantity);
 					}
+					System.out.println(newOrder);
 					return oDao.save(newOrder);
 				}
 				else {
+					System.out.println("Not same");
 					newOrder.setCardNumber(null);
 					newOrder.setAddress(loggedInCustomer.getAddress().get(odto.getAddressType()));
 					newOrder.setDate(LocalDate.now());
