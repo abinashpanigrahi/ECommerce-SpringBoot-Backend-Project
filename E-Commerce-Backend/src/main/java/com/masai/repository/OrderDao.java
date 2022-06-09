@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.masai.exception.CustomerNotFoundException;
 import com.masai.exception.OrderException;
+import com.masai.models.CartItem;
 import com.masai.models.Customer;
 import com.masai.models.Order;
 import com.masai.models.Product;
