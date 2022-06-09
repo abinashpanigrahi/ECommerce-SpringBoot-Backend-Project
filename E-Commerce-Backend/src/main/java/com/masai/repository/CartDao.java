@@ -10,7 +10,4 @@ import com.masai.models.Product;
 
 @Repository
 public interface CartDao extends JpaRepository<Cart,Integer> {
-
-//	public Map<Product,Integer> findbyName(String productName);
-//	public Cart findbyId(Integer cartId);
 }
