@@ -53,7 +53,9 @@ public class OrderServiceImpl implements OrderService {
 			
 			
 			if(productsInCart.size()!=0) {
-				if(usersCardNumber.equals(userGivenCardNumber)) {
+				if((usersCardNumber.equals(userGivenCardNumber)) 
+						&& (odto.getCardNumber().getCardValidity().equals(loggedInCustomer.getCreditCard().getCardValidity())
+								&& (odto.getCardNumber().getCardCVV().equals(loggedInCustomer.getCreditCard().getCardCVV())))) {
 					
 					//System.out.println(usersCardNumber);
 					newOrder.setCardNumber(odto.getCardNumber().getCardNumber());
@@ -136,7 +138,9 @@ public class OrderServiceImpl implements OrderService {
 			String usersCardNumber= loggedInCustomer.getCreditCard().getCardNumber();
 			String userGivenCardNumber= orderdto.getCardNumber().getCardNumber();
 //			System.out.println(loggedInCustomer);
-			if(usersCardNumber.equals(userGivenCardNumber)) {
+			if((usersCardNumber.equals(userGivenCardNumber)) 
+					&& (orderdto.getCardNumber().getCardValidity().equals(loggedInCustomer.getCreditCard().getCardValidity())
+							&& (orderdto.getCardNumber().getCardCVV().equals(loggedInCustomer.getCreditCard().getCardCVV())))) {
 				existingOrder.setCardNumber(orderdto.getCardNumber().getCardNumber());
 				existingOrder.setAddress(existingOrder.getCustomer().getAddress().get(orderdto.getAddressType()));
 				existingOrder.setOrderStatus(OrderStatusValues.SUCCESS);
