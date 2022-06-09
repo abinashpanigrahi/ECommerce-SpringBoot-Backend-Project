@@ -120,11 +120,34 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException {
+	public Order cancelOrderByOrderId(Integer OrderId,String token) throws OrderException {
 		Order order= oDao.findById(OrderId).orElseThrow(()->new OrderException("No order exists with given OrderId "+ OrderId));
-		order.setOrderStatus(OrderStatusValues.CANCELLED);
-		oDao.save(order);
-		return order;
+		if(order.getCustomer().getCustomerId()==cs.getLoggedInCustomerDetails(token).getCustomerId()) {
+			if(order.getOrderStatus()==OrderStatusValues.PENDING) {
+				order.setOrderStatus(OrderStatusValues.CANCELLED);
+				oDao.save(order);
+				return order;
+			}
+			else if(order.getOrderStatus()==OrderStatusValues.SUCCESS) {
+				order.setOrderStatus(OrderStatusValues.CANCELLED);
+				List<CartItem> cartItemsList= order.getOrdercartItems();
+				
+				for(CartItem cartItem : cartItemsList ) {
+					Integer addedQuantity = cartItem.getCartProduct().getQuantity()+cartItem.getCartItemQuantity();
+					cartItem.getCartProduct().setQuantity(addedQuantity);
+				}
+				oDao.save(order);
+				return order;
+			}
+			else {
+				throw new OrderException("Order was already cancelled");
+			}
+		}
+		else {
+			throw new LoginException("Invalid session token for customer"+"Kindly Login");
+		}
+
+		
 	}
 
 	@Override
