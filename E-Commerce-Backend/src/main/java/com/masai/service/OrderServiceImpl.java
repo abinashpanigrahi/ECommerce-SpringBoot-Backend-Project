@@ -65,6 +65,12 @@ public class OrderServiceImpl implements OrderService {
 					
 					for(CartItem cartItem : cartItemsList ) {
 						Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
+						if(remainingQuantity < 0 || cartItem.getCartProduct().getStatus() == ProductStatus.OUTOFSTOCK) {
+							CartDTO cartdto = new CartDTO();
+							cartdto.setProductId(cartItem.getCartProduct().getProductId());
+							cartservicei.removeProductFromCart(cartdto, token);
+							throw new OrderException("Product "+ cartItem.getCartProduct().getProductName() + " OUT OF STOCK");
+						}
 						cartItem.getCartProduct().setQuantity(remainingQuantity);
 						if(cartItem.getCartProduct().getQuantity()==0) {
 							cartItem.getCartProduct().setStatus(ProductStatus.OUTOFSTOCK);
@@ -134,9 +140,15 @@ public class OrderServiceImpl implements OrderService {
 				existingOrder.setCardNumber(orderdto.getCardNumber().getCardNumber());
 				existingOrder.setAddress(existingOrder.getCustomer().getAddress().get(orderdto.getAddressType()));
 				existingOrder.setOrderStatus(OrderStatusValues.SUCCESS);
-				List<CartItem> cartItemsList= loggedInCustomer.getCustomerCart().getCartItems();
+				List<CartItem> cartItemsList= existingOrder.getOrdercartItems();
 				for(CartItem cartItem : cartItemsList ) {
 					Integer remainingQuantity = cartItem.getCartProduct().getQuantity()-cartItem.getCartItemQuantity();
+					if(remainingQuantity < 0 || cartItem.getCartProduct().getStatus() == ProductStatus.OUTOFSTOCK) {
+						CartDTO cartdto = new CartDTO();
+						cartdto.setProductId(cartItem.getCartProduct().getProductId());
+						cartservicei.removeProductFromCart(cartdto, token);
+						throw new OrderException("Product "+ cartItem.getCartProduct().getProductName() + " OUT OF STOCK");
+					}
 					cartItem.getCartProduct().setQuantity(remainingQuantity);
 					if(cartItem.getCartProduct().getQuantity()==0) {
 						cartItem.getCartProduct().setStatus(ProductStatus.OUTOFSTOCK);
