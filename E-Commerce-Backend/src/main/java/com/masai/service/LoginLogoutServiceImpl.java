@@ -121,11 +121,15 @@ public class LoginLogoutServiceImpl implements LoginLogoutService{
 		if(opt.isPresent()) {
 			UserSession session = opt.get();
 			LocalDateTime endTime = session.getSessionEndTime();
+			boolean flag = false;
 			if(endTime.isBefore(LocalDateTime.now())) {
 				sessionDao.delete(session);
-				deleteExpiredTokens();
-				throw new LoginException("Session expired. Login Again");
+				flag = true;
 			}
+			
+			deleteExpiredTokens();
+			if(flag)
+				throw new LoginException("Session expired. Login Again");
 		}
 		else {
 			throw new LoginException("User not logged in. Invalid session token. Please login first.");
@@ -211,12 +215,19 @@ public class LoginLogoutServiceImpl implements LoginLogoutService{
 	
 	@Override
 	public void deleteExpiredTokens() {
+		
+		System.out.println("Inside delete tokens");
+		
 		List<UserSession> users = sessionDao.findAll();
+		
+		System.out.println(users);
 		
 		if(users.size() > 0) {
 			for(UserSession user:users) {
+				System.out.println(user.getUserId());
 				LocalDateTime endTime = user.getSessionEndTime();
 				if(endTime.isBefore(LocalDateTime.now())) {
+					System.out.println(user.getUserId());
 					sessionDao.delete(user);
 				}
 			}
