@@ -58,9 +58,9 @@ public class OrderController {
 	}
 	
 	@DeleteMapping("/orders/{orderId}")
-	public Order deleteOrderByOrderId(@PathVariable("orderId") Integer orderId){
+	public Order cancelTheOrderByOrderId(@PathVariable("orderId") Integer orderId,@RequestHeader("token") String token){
 		
-		return oService.cancelOrderByOrderId(orderId);
+		return oService.cancelOrderByOrderId(orderId,token);
 	}
 	
 	@PutMapping("/orders/{orderId}")
@@ -69,6 +69,7 @@ public class OrderController {
 		Order updatedOrder= oService.updateOrderByOrder(orderdto,orderId,token);
 		
 		return new ResponseEntity<Order>(updatedOrder,HttpStatus.ACCEPTED);
+		
 	}
 	
 	@GetMapping("/orders/by/date")

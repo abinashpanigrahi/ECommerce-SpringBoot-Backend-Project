@@ -17,7 +17,7 @@ public interface OrderService {
 	
 	public List<Order> getAllOrders() throws OrderException;
 	
-	public Order cancelOrderByOrderId(Integer OrderId) throws OrderException;
+	public Order cancelOrderByOrderId(Integer OrderId,String token) throws OrderException;
 	
 	public Order updateOrderByOrder(OrderDTO order,Integer OrderId,String token) throws OrderException,LoginException;
 	
