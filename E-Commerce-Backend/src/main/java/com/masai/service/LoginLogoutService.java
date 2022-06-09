@@ -14,6 +14,8 @@ public interface LoginLogoutService {
 	
 	public void checkTokenStatus(String token);
 	
+	public void deleteExpiredTokens();
+	
 	
 	public UserSession loginSeller(SellerDTO seller);
 	
