@@ -48,16 +48,15 @@ public class Order {
 	
 	private String cardNumber;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "customer_id", referencedColumnName = "customerId")
 	private Customer customer;
 	
 	@OneToMany
-
 	private List<CartItem> ordercartItems = new ArrayList<>();
 	
 	@ManyToOne
-
 	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
 	private Address address;
 }
