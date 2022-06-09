@@ -158,6 +158,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<Order> getAllOrdersByDate(LocalDate date) throws OrderException {
+		
 		List<Order> listOfOrdersOntheDay= oDao.findByDate(date);
 		return listOfOrdersOntheDay;
 	}
@@ -173,14 +174,5 @@ public class OrderServiceImpl implements OrderService {
 		else
 			throw new OrderException("No Order exists with orderId "+orderId);
 	}
-
-//	@Override
-//	public Customer getCustomerIdByToken(String token) throws CustomerNotFoundException {
-//		CustomerService cs= new CustomerServiceImpl();
-//		
-//		//Customer loggedInCustomer= cs.getLoggedInCustomerDetails(token);
-//		return cs.getLoggedInCustomerDetails(token);
-//		
-//	}
 
 }
