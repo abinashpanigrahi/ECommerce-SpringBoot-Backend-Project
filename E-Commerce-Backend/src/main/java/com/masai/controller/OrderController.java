@@ -83,4 +83,5 @@ public class OrderController {
 	public Customer getCustomerDetailsByOrderId(@PathVariable("orderId") Integer orderId) {
 		return oService.getCustomerByOrderid(orderId);
 	}
+
 }
