@@ -135,7 +135,11 @@ public class OrderServiceImpl implements OrderService {
 				for(CartItem cartItem : cartItemsList ) {
 					Integer addedQuantity = cartItem.getCartProduct().getQuantity()+cartItem.getCartItemQuantity();
 					cartItem.getCartProduct().setQuantity(addedQuantity);
+					if(cartItem.getCartProduct().getStatus() == ProductStatus.OUTOFSTOCK) {
+						cartItem.getCartProduct().setStatus(ProductStatus.AVAILABLE);
+					}
 				}
+				
 				oDao.save(order);
 				return order;
 			}
