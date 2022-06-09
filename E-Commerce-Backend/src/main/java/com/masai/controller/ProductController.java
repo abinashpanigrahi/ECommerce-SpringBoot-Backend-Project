@@ -22,6 +22,8 @@ import com.masai.models.ProductDTO;
 import com.masai.models.ProductStatus;
 import com.masai.service.ProductService;
 
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
+
 @RestController
 public class ProductController {
 
@@ -61,7 +63,7 @@ public class ProductController {
 
 	@DeleteMapping("/product/{id}")
 	public ResponseEntity<String> deleteProductFromCatalogHandler(@PathVariable("id") Integer id) {
-
+		
 		String res = pService.deleteProductFromCatalog(id);
 		return new ResponseEntity<String>(res, HttpStatus.OK);
 	}
@@ -99,6 +101,15 @@ public class ProductController {
 
 		return new ResponseEntity<List<ProductDTO>>(list, HttpStatus.OK);
 
+	}
+	
+	
+	@PutMapping("/products/{id}")
+	public ResponseEntity<Product> updateQuantityOfProduct(@PathVariable("id") Integer id,@RequestBody ProductDTO prodDto){
+		
+		 Product prod =   pService.updateProductQuantityWithId(id, prodDto);
+		
+		 return new ResponseEntity<Product>(prod,HttpStatus.ACCEPTED);
 	}
 
 }
