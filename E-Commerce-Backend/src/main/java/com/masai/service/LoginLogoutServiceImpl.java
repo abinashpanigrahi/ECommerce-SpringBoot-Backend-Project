@@ -1,6 +1,7 @@
 package com.masai.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -122,6 +123,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService{
 			LocalDateTime endTime = session.getSessionEndTime();
 			if(endTime.isBefore(LocalDateTime.now())) {
 				sessionDao.delete(session);
+				deleteExpiredTokens();
 				throw new LoginException("Session expired. Login Again");
 			}
 		}
@@ -205,5 +207,20 @@ public class LoginLogoutServiceImpl implements LoginLogoutService{
 	}
 	
 	
+	// Method to delete expired tokens
+	
+	@Override
+	public void deleteExpiredTokens() {
+		List<UserSession> users = sessionDao.findAll();
+		
+		if(users.size() > 0) {
+			for(UserSession user:users) {
+				LocalDateTime endTime = user.getSessionEndTime();
+				if(endTime.isBefore(LocalDateTime.now())) {
+					sessionDao.delete(user);
+				}
+			}
+		}
+	}
 	
 }
