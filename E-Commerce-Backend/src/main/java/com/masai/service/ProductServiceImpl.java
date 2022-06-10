@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.masai.exception.CategoryNotFoundException;
 import com.masai.exception.ProductNotFoundException;
@@ -72,8 +73,10 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String deleteProductFromCatalog(Integer id) throws ProductNotFoundException {
 		Optional<Product> opt = prodDao.findById(id);
+		
 		if (opt.isPresent()) {
 			Product prod = opt.get();
+			System.out.println(prod);
 			prodDao.delete(prod);
 			return "Product deleted from catalog";
 		} else
@@ -125,6 +128,26 @@ public class ProductServiceImpl implements ProductService {
 			return list;
 		} else
 			throw new ProductNotFoundException("No products found with given status:" + status);
+	}
+
+	@Override
+	public Product updateProductQuantityWithId(Integer id,ProductDTO prodDto) {
+		Product prod = null;
+		 Optional<Product> opt = prodDao.findById(id);
+		 
+		 if(opt!=null) {
+			  prod = opt.get();
+			 prod.setQuantity(prod.getQuantity()+prodDto.getQuantity());
+			 if(prod.getQuantity()>0) {
+				 prod.setStatus(ProductStatus.AVAILABLE);
+			 }
+			 prodDao.save(prod);
+			 
+		 }
+		 else
+			 throw new ProductNotFoundException("No product found with this Id");
+		
+		return prod;
 	}
 
 }

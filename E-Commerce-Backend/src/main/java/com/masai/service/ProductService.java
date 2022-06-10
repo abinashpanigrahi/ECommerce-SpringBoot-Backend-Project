@@ -23,5 +23,6 @@ public interface ProductService {
 	
 	public List<ProductDTO> getProductsOfStatus(ProductStatus status);
 	
+	public Product updateProductQuantityWithId(Integer id,ProductDTO prodDTO);
 
 }
