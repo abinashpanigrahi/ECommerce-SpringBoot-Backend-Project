@@ -12,9 +12,26 @@
 * Hibernate
 * MySQL (to persist data in database)
 
+## Modules
+
+* Login, Logout Module
+* Seller Module
+* Customer Module
+* Product Module
+* Cart Module
+* Order Module
+
 ## Features
 
-* Customers can register themselves and buy products, seller can perform the administrator functions of adding or deleting products. We have written business logic to authenticate and validate users at every point so that unknown users do not update the persisted data in our database.
+* Customer and Seller authentication & validation with session token having validity of 1 hour for security purposes
+* Seller Features:
+    ** Administrator Role
+    ** Only registered seller with valid session token can add/update/delete products from main database
+    ** Seller can access the details of different customers, orders
+* Customer Features:
+    ** Registering themselves with application, and logging in to for valid session token
+    ** Viewing products and adding them to cart and placing orders
+    ** Only logged in user can access his orders, cart and other features.
 
 ## Contributors
 
@@ -22,4 +39,20 @@
 * [@Dathuram16](https://github.com/Dathuram16)
 * [@kamalvinjamoori](https://github.com/kamalvinjamoori)
 * [@anandrajsingh05](https://github.com/anandrajsingh05)
-* [@#4Adithyanathkv](https://github.com/Adithyanathkv)
+* [@Adithyanathkv](https://github.com/Adithyanathkv)
+
+
+## Installation & Run
+
+* Before running the API server, you should update the database config inside the [application.properties](E-Commerce-Backend\src\main\resources\application.properties) file. 
+* Update the port number, username and password as per your local database config.
+
+```
+    server.port=8009
+
+    spring.datasource.url=jdbc:mysql://localhost:3306/ecommercedb
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    spring.datasource.username=root
+    spring.datasource.password=root
+
+```
