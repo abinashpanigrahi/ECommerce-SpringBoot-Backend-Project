@@ -17,7 +17,7 @@ public class CreditCard {
 	@NotNull
 	private String cardNumber;
 	
-	@Pattern(regexp = "[0-9]{2}/[0-9]{2,4}", message = "Invalid validity. Enter in MM/YY or MM/YYYY format")
+	@Pattern(regexp = "[0-9]{2}/[2-3]{1}[2-9]{1}", message = "Invalid validity. Enter in MM/YY format")
 	private String cardValidity;
 	
 	@Pattern(regexp = "[0-9]{3}", message = "Invalid CVV. Must be numeric 3 digits length.")
