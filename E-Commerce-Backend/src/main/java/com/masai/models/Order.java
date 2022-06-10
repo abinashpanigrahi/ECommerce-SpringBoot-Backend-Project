@@ -49,6 +49,7 @@ public class Order {
 	private String cardNumber;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "customer_id", referencedColumnName = "customerId")
 	private Customer customer;
 	
