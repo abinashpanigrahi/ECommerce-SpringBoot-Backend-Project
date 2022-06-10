@@ -25,13 +25,13 @@
 
 * Customer and Seller authentication & validation with session token having validity of 1 hour for security purposes
 * Seller Features:
-    ** Administrator Role
-    ** Only registered seller with valid session token can add/update/delete products from main database
-    ** Seller can access the details of different customers, orders
+    * Administrator Role of the entire application
+    * Only registered seller with valid session token can add/update/delete products from main database
+    * Seller can access the details of different customers, orders
 * Customer Features:
-    ** Registering themselves with application, and logging in to for valid session token
-    ** Viewing products and adding them to cart and placing orders
-    ** Only logged in user can access his orders, cart and other features.
+    * Registering themselves with application, and logging in to get the valid session token
+    * Viewing different products and adding them to cart and placing orders
+    * Only logged in user can access his orders, cart and other features.
 
 ## Contributors
 
