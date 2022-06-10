@@ -56,3 +56,20 @@
     spring.datasource.password=root
 
 ```
+
+## API Root Endpoint
+
+`https://localhost:8009/`
+
+
+## API Module Endpoints
+
+### Login/Logout Module
+
+
+### Cart Module
+
+* `GET /cart` : Get all Items in Customer Cart
+* `POST /cart/add` : Add Item to Cart
+* `DELETE /cart` : Remove Item from Cart
+* `DELETE /cart/clear` : Clear entire cart
