@@ -112,6 +112,7 @@
 * `GET /product/{id}` : Gets product with given product id
 * `GET /products` : Gets all products
 * `GET /products/{category}` : Gets product with given category
+* `GET /products/seller/{id}` : Gets product of given seller id
 * `POST /products` : Adds a new product to database
 * `PUT /products` : Updates the product with given product id
 * `PUT /products/{id}` : Updates product quantity
