@@ -84,6 +84,15 @@ public class ProductController {
 
 		return new ResponseEntity<List<Product>>(list, HttpStatus.OK);
 	}
+	
+  //this method gets the products mapped to a particular seller
+	@GetMapping("/products/seller/{id}")
+	public ResponseEntity<List<ProductDTO>> getAllProductsOfSellerHandler(@PathVariable("id") Integer id) {
+
+		List<ProductDTO> list = pService.getAllProductsOfSeller(id);
+
+		return new ResponseEntity<List<ProductDTO>>(list, HttpStatus.OK);
+	}
 
 	@GetMapping("/products/{catenum}")
 	public ResponseEntity<List<ProductDTO>> getAllProductsInCategory(@PathVariable("catenum") String catenum) {

@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getAllProductsIncatalog() {
 		List<Product> list = prodDao.findAll();
-
+		
 		if (list.size() > 0) {
 			return list;
 		} else
@@ -148,6 +148,24 @@ public class ProductServiceImpl implements ProductService {
 			 throw new ProductNotFoundException("No product found with this Id");
 		
 		return prod;
+	}
+
+	
+
+	@Override
+	public List<ProductDTO> getAllProductsOfSeller(Integer id) {
+		
+		List<ProductDTO> list = prodDao.getProductsOfASeller(id);
+		
+		if(list.size()>0) {
+			
+			return list;
+			
+		}
+		
+		else {
+			throw new ProductNotFoundException("No products with SellerId: "+id);
+		}
 	}
 
 }
